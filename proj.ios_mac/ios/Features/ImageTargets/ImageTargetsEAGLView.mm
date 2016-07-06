@@ -192,8 +192,8 @@ namespace {
     for (int i = 0; i < state.getNumTrackableResults(); ++i) {
         // Get the trackable
         const Vuforia::TrackableResult* result = state.getTrackableResult(i);
-        const Vuforia::Trackable& trackable = result->getTrackable();
-        NSLog(@"trackable.getName() = %s", trackable.getName());
+//        const Vuforia::Trackable& trackable = result->getTrackable();
+//        NSLog(@"trackable.getName() = %s", trackable.getName());
 
         //const Vuforia::Trackable& trackable = result->getTrackable();
         Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());

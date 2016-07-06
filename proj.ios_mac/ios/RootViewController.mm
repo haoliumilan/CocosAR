@@ -52,20 +52,18 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
 }
-
 */
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-//    cocos2d::Application::getInstance()->applicationDidEnterBackground();
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    cocos2d::Application::getInstance()->applicationWillEnterForeground();
 }
 
 // Override to allow orientations other than the default portrait orientation.
@@ -137,6 +135,5 @@
     OneViewController *oneViewCtrl = [[OneViewController alloc] init];
     [self presentViewController:oneViewCtrl animated:NO completion:nil];
 }
-
 
 @end

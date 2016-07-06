@@ -62,8 +62,8 @@ static AppDelegate s_sharedApplication;
     // Use RootViewController manage CCEAGLView 
     _viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     _viewController.wantsFullScreenLayout = YES;
-    _viewController.view = eaglView;
-
+//    _viewController.view = eaglView;
+    
     // Set RootViewController to window
     if ( [[UIDevice currentDevice].systemVersion floatValue] < 6.0)
     {
@@ -77,7 +77,13 @@ static AppDelegate s_sharedApplication;
     }
 
     [window makeKeyAndVisible];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    [imageView setImage:[UIImage imageNamed:@"Icon-100.png"]];
+    [_viewController.view addSubview:imageView];
 
+    [_viewController.view setBackgroundColor:[UIColor orangeColor]];
+    
     [[UIApplication sharedApplication] setStatusBarHidden:true];
 
     // IMPORTANT: Setting the GLView should be done after creating the RootViewController
@@ -85,6 +91,7 @@ static AppDelegate s_sharedApplication;
     cocos2d::Director::getInstance()->setOpenGLView(glview);
     
 //    app->run();
+    
     [_viewController showAR];
     
     return YES;

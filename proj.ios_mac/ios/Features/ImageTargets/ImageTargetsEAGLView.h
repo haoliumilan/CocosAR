@@ -43,10 +43,13 @@ countries.
 }
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
+@property (nonatomic, retain) UIImage *snapshotImage;
 
 - (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app;
 
 - (void)finishOpenGLESCommands;
 - (void)freeOpenGLESResources;
+
+- (UIImage*)snapshot:(UIView*)eaglview;
 
 @end

@@ -59,11 +59,13 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    cocos2d::Application::getInstance()->applicationDidEnterBackground();
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+//    cocos2d::Application::getInstance()->applicationWillEnterForeground();
 }
 
 // Override to allow orientations other than the default portrait orientation.

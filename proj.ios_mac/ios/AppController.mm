@@ -45,8 +45,9 @@ static AppDelegate s_sharedApplication;
     // Override point for customization after application launch.
 
     // Add the view controller's view to the window and display.
-    window = [[UIWindow alloc] initWithFrame: [[UIScreen mainScreen] bounds]];
-
+    CGRect frame = [[UIScreen mainScreen] bounds];
+    window = [[UIWindow alloc] initWithFrame:frame];
+    
     // Init the CCEAGLView
     CCEAGLView *eaglView = [CCEAGLView viewWithFrame: [window bounds]
                                          pixelFormat: (NSString*)cocos2d::GLViewImpl::_pixelFormat
@@ -62,7 +63,7 @@ static AppDelegate s_sharedApplication;
     // Use RootViewController manage CCEAGLView 
     _viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     _viewController.wantsFullScreenLayout = YES;
-//    _viewController.view = eaglView;
+    _viewController.view = eaglView;
     
     // Set RootViewController to window
     if ( [[UIDevice currentDevice].systemVersion floatValue] < 6.0)
@@ -78,11 +79,10 @@ static AppDelegate s_sharedApplication;
 
     [window makeKeyAndVisible];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-    [imageView setImage:[UIImage imageNamed:@"Icon-100.png"]];
-    [_viewController.view addSubview:imageView];
-
-    [_viewController.view setBackgroundColor:[UIColor orangeColor]];
+//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+//    [imageView setImage:[UIImage imageNamed:@"Icon-100.png"]];
+//    [_viewController.view addSubview:imageView];
+//    [_viewController.view setBackgroundColor:[UIColor orangeColor]];
     
     [[UIApplication sharedApplication] setStatusBarHidden:true];
 
@@ -90,9 +90,9 @@ static AppDelegate s_sharedApplication;
     cocos2d::GLView *glview = cocos2d::GLViewImpl::createWithEAGLView(eaglView);
     cocos2d::Director::getInstance()->setOpenGLView(glview);
     
-//    app->run();
+    app->run();
     
-    [_viewController showAR];
+//    [_viewController showAR];
     
     return YES;
 }

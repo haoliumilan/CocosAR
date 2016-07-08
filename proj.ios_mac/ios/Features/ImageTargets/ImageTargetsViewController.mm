@@ -90,6 +90,10 @@ countries.
 
 - (void)backBtnCb:(id)sender {
     [self dismissARViewController];
+//    UIImage *image = [eaglView snapshot:eaglView];
+//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+//    [imageView setImage:image];
+//    [eaglView addSubview:imageView];
 }
 
 - (void) pauseAR {

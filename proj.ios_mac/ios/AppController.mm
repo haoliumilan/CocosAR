@@ -126,11 +126,12 @@ static AppDelegate s_sharedApplication;
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, called instead of applicationWillTerminate: when the user quits.
      */
-    cocos2d::Application::getInstance()->applicationDidEnterBackground();
     if (self.glResourceHandler) {
         // Delete OpenGL resources (e.g. framebuffer) of the SampleApp AR View
         [self.glResourceHandler freeOpenGLESResources];
         [self.glResourceHandler finishOpenGLESCommands];
+    } else {
+        cocos2d::Application::getInstance()->applicationDidEnterBackground();    
     }
 
 }
@@ -139,7 +140,10 @@ static AppDelegate s_sharedApplication;
     /*
      Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
      */
-    cocos2d::Application::getInstance()->applicationWillEnterForeground();
+    if (self.glResourceHandler) {
+    } else {
+        cocos2d::Application::getInstance()->applicationWillEnterForeground();
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

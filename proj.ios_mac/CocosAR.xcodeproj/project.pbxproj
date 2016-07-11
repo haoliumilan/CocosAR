@@ -70,7 +70,7 @@
 		8466DA261D1D04AA00112CC6 /* Simple.fragsh in Resources */ = {isa = PBXBuildFile; fileRef = 8466DA1B1D1D04AA00112CC6 /* Simple.fragsh */; };
 		8466DA271D1D04AA00112CC6 /* Simple.vertsh in Resources */ = {isa = PBXBuildFile; fileRef = 8466DA1C1D1D04AA00112CC6 /* Simple.vertsh */; };
 		8466DA281D1D04AA00112CC6 /* Texture.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8466DA1F1D1D04AA00112CC6 /* Texture.mm */; };
-		8466DA2F1D1D04B200112CC6 /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8466DA2C1D1D04B200112CC6 /* ImageTargetsEAGLView.mm */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		8466DA2F1D1D04B200112CC6 /* ImageTargetsEAGLView2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8466DA2C1D1D04B200112CC6 /* ImageTargetsEAGLView2.mm */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		8466DA301D1D04B200112CC6 /* ImageTargetsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8466DA2E1D1D04B200112CC6 /* ImageTargetsViewController.mm */; };
 		8466DA321D1D2C1100112CC6 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8466DA311D1D2C1100112CC6 /* CoreVideo.framework */; };
 		8466DA361D1D2C5500112CC6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8466DA351D1D2C5500112CC6 /* CoreMedia.framework */; };
@@ -78,6 +78,7 @@
 		8466DA3A1D1D2C7D00112CC6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8466DA391D1D2C7D00112CC6 /* SystemConfiguration.framework */; };
 		8466DA3C1D1D2C8B00112CC6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8466DA3B1D1D2C8B00112CC6 /* CoreFoundation.framework */; };
 		847ABFAD1D2B861600D5F91B /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 847ABFAC1D2B861600D5F91B /* OneViewController.m */; };
+		84BBCFFC1D33773F005F97EA /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84BBCFFB1D33773F005F97EA /* ImageTargetsEAGLView.mm */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		84E470ED1D2A79A700C18FA1 /* OcUtility.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84E470EB1D2A79A700C18FA1 /* OcUtility.mm */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
@@ -191,8 +192,8 @@
 		8466DA1D1D1D04AA00112CC6 /* Teapot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Teapot.h; sourceTree = "<group>"; };
 		8466DA1E1D1D04AA00112CC6 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
 		8466DA1F1D1D04AA00112CC6 /* Texture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Texture.mm; sourceTree = "<group>"; };
-		8466DA2B1D1D04B200112CC6 /* ImageTargetsEAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsEAGLView.h; sourceTree = "<group>"; };
-		8466DA2C1D1D04B200112CC6 /* ImageTargetsEAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsEAGLView.mm; sourceTree = "<group>"; };
+		8466DA2B1D1D04B200112CC6 /* ImageTargetsEAGLView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsEAGLView2.h; sourceTree = "<group>"; };
+		8466DA2C1D1D04B200112CC6 /* ImageTargetsEAGLView2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsEAGLView2.mm; sourceTree = "<group>"; };
 		8466DA2D1D1D04B200112CC6 /* ImageTargetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsViewController.h; sourceTree = "<group>"; };
 		8466DA2E1D1D04B200112CC6 /* ImageTargetsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsViewController.mm; sourceTree = "<group>"; };
 		8466DA311D1D2C1100112CC6 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.2.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
@@ -203,6 +204,8 @@
 		8466DA3B1D1D2C8B00112CC6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.2.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		847ABFAB1D2B861600D5F91B /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneViewController.h; path = ios/OneViewController.h; sourceTree = SOURCE_ROOT; };
 		847ABFAC1D2B861600D5F91B /* OneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OneViewController.m; path = ios/OneViewController.m; sourceTree = SOURCE_ROOT; };
+		84BBCFFA1D33773F005F97EA /* ImageTargetsEAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsEAGLView.h; sourceTree = "<group>"; };
+		84BBCFFB1D33773F005F97EA /* ImageTargetsEAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsEAGLView.mm; sourceTree = "<group>"; };
 		84E470EB1D2A79A700C18FA1 /* OcUtility.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OcUtility.mm; sourceTree = "<group>"; };
 		84E470EC1D2A79A700C18FA1 /* OcUtility.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OcUtility.hpp; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -468,8 +471,10 @@
 		8466DA2A1D1D04B200112CC6 /* ImageTargets */ = {
 			isa = PBXGroup;
 			children = (
-				8466DA2B1D1D04B200112CC6 /* ImageTargetsEAGLView.h */,
-				8466DA2C1D1D04B200112CC6 /* ImageTargetsEAGLView.mm */,
+				84BBCFFA1D33773F005F97EA /* ImageTargetsEAGLView.h */,
+				84BBCFFB1D33773F005F97EA /* ImageTargetsEAGLView.mm */,
+				8466DA2B1D1D04B200112CC6 /* ImageTargetsEAGLView2.h */,
+				8466DA2C1D1D04B200112CC6 /* ImageTargetsEAGLView2.mm */,
 				8466DA2D1D1D04B200112CC6 /* ImageTargetsViewController.h */,
 				8466DA2E1D1D04B200112CC6 /* ImageTargetsViewController.mm */,
 			);
@@ -628,9 +633,10 @@
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				847ABFAD1D2B861600D5F91B /* OneViewController.m in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
+				84BBCFFC1D33773F005F97EA /* ImageTargetsEAGLView.mm in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				8466DA211D1D04AA00112CC6 /* SampleApplicationSession.mm in Sources */,
-				8466DA2F1D1D04B200112CC6 /* ImageTargetsEAGLView.mm in Sources */,
+				8466DA2F1D1D04B200112CC6 /* ImageTargetsEAGLView2.mm in Sources */,
 				8466DA301D1D04B200112CC6 /* ImageTargetsViewController.mm in Sources */,
 				8466DA201D1D04AA00112CC6 /* SampleApplication3DModel.m in Sources */,
 				8466DA221D1D04AA00112CC6 /* SampleApplicationShaderUtils.m in Sources */,

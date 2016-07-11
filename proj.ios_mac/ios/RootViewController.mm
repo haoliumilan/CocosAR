@@ -65,7 +65,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    cocos2d::Application::getInstance()->applicationWillEnterForeground();
+    cocos2d::Application::getInstance()->applicationWillEnterForeground();
 }
 
 // Override to allow orientations other than the default portrait orientation.

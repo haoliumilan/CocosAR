@@ -18,7 +18,7 @@ countries.
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
-@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler> {
+@interface ImageTargetsEAGLView2 : UIView <UIGLViewProtocol, SampleGLResourceHandler> {
 @private
     // OpenGL ES context
     EAGLContext *context;
@@ -28,7 +28,18 @@ countries.
     GLuint defaultFramebuffer;
     GLuint colorRenderbuffer;
     GLuint depthRenderbuffer;
-        
+
+    // Shader handles
+    GLuint shaderProgramID;
+    GLint vertexHandle;
+    GLint normalHandle;
+    GLint textureCoordHandle;
+    GLint mvpMatrixHandle;
+    GLint texSampler2DHandle;
+    
+    // Texture used when rendering augmentation
+    Texture* augmentationTexture;
+    
 }
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;

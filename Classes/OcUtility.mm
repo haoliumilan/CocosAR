@@ -22,11 +22,16 @@ OcUtility* OcUtility::getInstance()
     return s_pcIf;
 }
 
-void OcUtility::showAR()
+void OcUtility::showARViewController()
 {
     AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
-    [appCtrl.viewController showAR];
-    
+    [appCtrl.viewController showARViewController];
+}
+
+void OcUtility::showARControl()
+{
+    AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
+    [appCtrl.viewController showARControl];
 }
 
 void OcUtility::showOne()

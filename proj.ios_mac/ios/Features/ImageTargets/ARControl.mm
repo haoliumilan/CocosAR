@@ -7,7 +7,7 @@ Vuforia is a trademark of PTC Inc., registered in the United States and other
 countries.
 ===============================================================================*/
 
-#import "ImageTargetsViewController.h"
+#import "ARControl.h"
 #import "AppController.h"
 #import "RootViewController.h"
 #import <Vuforia/Vuforia.h>
@@ -17,25 +17,25 @@ countries.
 #import <Vuforia/DataSet.h>
 #import <Vuforia/CameraDevice.h>
 
-@interface ImageTargetsViewController ()
+@interface ARControl ()
 
 @end
 
-@implementation ImageTargetsViewController
+@implementation ARControl
 
 @synthesize vapp, eaglView;
 
-- (void)loadView
+- (id)initWithParentViewController:(UIViewController *)viewCtrl
 {
+    self = [super init];
+    
     // Custom initialization
-    self.title = @"Image Targets";
-        
     vapp = [[SampleApplicationSession alloc] initWithDelegate:self];
     
     CGRect viewFrame = [self getCurrentARViewFrame];
     
-    eaglView = [[ImageTargetsEAGLView alloc] initWithFrame:viewFrame appSession:vapp];
-    [self setView:eaglView];
+    eaglView = [[ImageTargetsEAGLView3 alloc] initWithFrame:viewFrame appSession:vapp];
+//    [viewCtrl.view addSubview:eaglView];
     AppController *appDelegate = (AppController*)[[UIApplication sharedApplication] delegate];
     appDelegate.glResourceHandler = eaglView;
     
@@ -58,50 +58,36 @@ countries.
      object:nil];
     
     // initialize AR
-    [vapp initAR:Vuforia::GL_20 orientation:self.interfaceOrientation];
-
+    [vapp initAR:Vuforia::GL_20 orientation:viewCtrl.interfaceOrientation];
+    
     // show loading animation while AR is being initialized
     [self showLoadingAnimation];
     
     [self showBackBtn];
+    
+    return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // Do any additional setup after loading the view.
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-    
-    NSLog(@"self.navigationController.navigationBarHidden: %s", self.navigationController.navigationBarHidden ? "Yes" : "No");
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    
-    [vapp stopAR:nil];
-    
-    // Be a good OpenGL ES citizen: now that Vuforia is paused and the render
-    // thread is not executing, inform the root view controller that the
-    // EAGLView should finish any OpenGL ES commands
-    [self finishOpenGLESCommands];
-    
-    AppController *appDelegate = (AppController*)[[UIApplication sharedApplication] delegate];
-    appDelegate.glResourceHandler = nil;
-    
-    [super viewWillDisappear:animated];
-}
+//- (void)viewWillDisappear:(BOOL)animated
+//{
+//    
+//    [vapp stopAR:nil];
+//    
+//    // Be a good OpenGL ES citizen: now that Vuforia is paused and the render
+//    // thread is not executing, inform the root view controller that the
+//    // EAGLView should finish any OpenGL ES commands
+//    [self finishOpenGLESCommands];
+//    
+//    AppController *appDelegate = (AppController*)[[UIApplication sharedApplication] delegate];
+//    appDelegate.glResourceHandler = nil;
+//    
+//    [super viewWillDisappear:animated];
+//}
 
 - (void)dealloc
 {
     [super dealloc];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - SampleApplicationControl
@@ -274,8 +260,8 @@ countries.
 
 - (void)dismissARViewController
 {
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [eaglView removeFromSuperview];
+    eaglView = nil;
 }
 
 // Load the image tracker data set
@@ -350,5 +336,11 @@ countries.
     // Called in response to applicationDidEnterBackground.  Inform the EAGLView
     [eaglView freeOpenGLESResources];
 }
+
+- (void)getARResult
+{
+    [eaglView getARResult];
+}
+
 
 @end

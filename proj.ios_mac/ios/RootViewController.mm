@@ -36,7 +36,6 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
         // Custom initialization
-        isFirst = YES;
     }
     return self;
 }
@@ -59,7 +58,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    cocos2d::Application::getInstance()->applicationDidEnterBackground();
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -126,11 +124,28 @@
     [super dealloc];
 }
 
-- (void)showAR {
+- (void)showARViewController {
+    cocos2d::Application::getInstance()->applicationDidEnterBackground();
+
     [self.view setBackgroundColor:[UIColor greenColor]];
     ImageTargetsViewController *imageTargetsViewCtrl = [[ImageTargetsViewController alloc] init];
     [self presentViewController:imageTargetsViewCtrl animated:NO completion:nil];
 
+}
+
+- (void)showARControl {
+    cocos2d::Application::getInstance()->applicationDidEnterBackground();
+    
+    arCtrl = [[ARControl alloc] initWithParentViewController:self];
+    
+    UIButton *arBtn = [[UIButton alloc] initWithFrame:CGRectMake(200, 200, 100, 100)];
+    [self.view addSubview:arBtn];
+    [arBtn setTitle:@"Result" forState:UIControlStateNormal];
+    [arBtn addTarget:self action:@selector(ARBtnCb:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)ARBtnCb:(id)sender {
+    [arCtrl getARResult];
 }
 
 - (void)showOne {

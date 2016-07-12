@@ -18,7 +18,9 @@ class OcUtility
 public:
     static OcUtility* getInstance();
     
-    void showAR();
+    void showARViewController();
+    
+    void showARControl();
     
     void showOne();
 };

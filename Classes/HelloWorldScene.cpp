@@ -109,7 +109,6 @@ bool HelloWorld::init()
 
 void HelloWorld::menuCloseCallback(Ref* sender)
 {
-    OcUtility::getInstance()->showAR();
-//    OcUtility::getInstance()->showOne();
+    OcUtility::getInstance()->showARControl();
 }
 

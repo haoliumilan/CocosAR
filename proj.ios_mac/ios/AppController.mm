@@ -79,10 +79,10 @@ static AppDelegate s_sharedApplication;
 
     [window makeKeyAndVisible];
     
-//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-//    [imageView setImage:[UIImage imageNamed:@"Icon-100.png"]];
-//    [_viewController.view addSubview:imageView];
-//    [_viewController.view setBackgroundColor:[UIColor orangeColor]];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    [imageView setImage:[UIImage imageNamed:@"Icon-100.png"]];
+    [_viewController.view addSubview:imageView];
+    [_viewController.view setBackgroundColor:[UIColor orangeColor]];
     
     [[UIApplication sharedApplication] setStatusBarHidden:true];
 
@@ -92,7 +92,7 @@ static AppDelegate s_sharedApplication;
     
     app->run();
     
-//    [_viewController showAR];
+//    [_viewController showARViewController];
     
     return YES;
 }
@@ -105,12 +105,6 @@ static AppDelegate s_sharedApplication;
      */
      //We don't need to call this method any more. It will interupt user defined game pause&resume logic
     /* cocos2d::Director::getInstance()->pause(); */
-    if (self.glResourceHandler) {
-        // As per Apple's documentation,
-        // we call glFinish in applicationWillResignActive
-        [self.glResourceHandler finishOpenGLESCommands];
-    }
-
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

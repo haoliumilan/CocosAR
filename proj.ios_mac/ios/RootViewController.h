@@ -24,13 +24,16 @@
  ****************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "ARControl.h"
 
 @interface RootViewController : UIViewController {
-    BOOL isFirst;
+    ARControl *arCtrl;
 }
 - (BOOL)prefersStatusBarHidden;
 
-- (void)showAR;
+- (void)showARViewController;
+
+- (void)showARControl;
 
 - (void)showOne;
 

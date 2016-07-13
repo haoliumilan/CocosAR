@@ -77,7 +77,6 @@
 		8466DA381D1D2C6600112CC6 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8466DA371D1D2C6600112CC6 /* MediaPlayer.framework */; };
 		8466DA3A1D1D2C7D00112CC6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8466DA391D1D2C7D00112CC6 /* SystemConfiguration.framework */; };
 		8466DA3C1D1D2C8B00112CC6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8466DA3B1D1D2C8B00112CC6 /* CoreFoundation.framework */; };
-		846750DE1D34CABB000C5CAB /* ImageTargetsEAGLView3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 846750DB1D34CABB000C5CAB /* ImageTargetsEAGLView3.mm */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		846750DF1D34CABB000C5CAB /* ARControl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 846750DD1D34CABB000C5CAB /* ARControl.mm */; };
 		847ABFAD1D2B861600D5F91B /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 847ABFAC1D2B861600D5F91B /* OneViewController.m */; };
 		84BBCFFC1D33773F005F97EA /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84BBCFFB1D33773F005F97EA /* ImageTargetsEAGLView.mm */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -204,8 +203,6 @@
 		8466DA371D1D2C6600112CC6 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.2.sdk/System/Library/Frameworks/MediaPlayer.framework; sourceTree = DEVELOPER_DIR; };
 		8466DA391D1D2C7D00112CC6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.2.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		8466DA3B1D1D2C8B00112CC6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.2.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
-		846750DA1D34CABB000C5CAB /* ImageTargetsEAGLView3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageTargetsEAGLView3.h; path = ImageTargets/ImageTargetsEAGLView3.h; sourceTree = "<group>"; };
-		846750DB1D34CABB000C5CAB /* ImageTargetsEAGLView3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageTargetsEAGLView3.mm; path = ImageTargets/ImageTargetsEAGLView3.mm; sourceTree = "<group>"; };
 		846750DC1D34CABB000C5CAB /* ARControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARControl.h; path = ImageTargets/ARControl.h; sourceTree = "<group>"; };
 		846750DD1D34CABB000C5CAB /* ARControl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ARControl.mm; path = ImageTargets/ARControl.mm; sourceTree = "<group>"; };
 		847ABFAB1D2B861600D5F91B /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneViewController.h; path = ios/OneViewController.h; sourceTree = SOURCE_ROOT; };
@@ -491,8 +488,6 @@
 		846750D91D34CAA7000C5CAB /* ImageTargets3 */ = {
 			isa = PBXGroup;
 			children = (
-				846750DA1D34CABB000C5CAB /* ImageTargetsEAGLView3.h */,
-				846750DB1D34CABB000C5CAB /* ImageTargetsEAGLView3.mm */,
 				846750DC1D34CABB000C5CAB /* ARControl.h */,
 				846750DD1D34CABB000C5CAB /* ARControl.mm */,
 			);
@@ -648,7 +643,6 @@
 				8466DA281D1D04AA00112CC6 /* Texture.mm in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
-				846750DE1D34CABB000C5CAB /* ImageTargetsEAGLView3.mm in Sources */,
 				846750DF1D34CABB000C5CAB /* ARControl.mm in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				847ABFAD1D2B861600D5F91B /* OneViewController.m in Sources */,

@@ -8,7 +8,6 @@ countries.
 ===============================================================================*/
 
 #import <UIKit/UIKit.h>
-#import "ImageTargetsEAGLView3.h"
 #import "SampleApplicationSession.h"
 #import <Vuforia/DataSet.h>
 
@@ -18,7 +17,6 @@ countries.
     
 }
 
-@property (nonatomic, strong) ImageTargetsEAGLView3* eaglView;
 @property (nonatomic, strong) SampleApplicationSession * vapp;
 
 - (id)initWithParentViewController:(UIViewController *)viewCtrl;

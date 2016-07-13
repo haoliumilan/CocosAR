@@ -63,7 +63,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    cocos2d::Application::getInstance()->applicationWillEnterForeground();
+//    cocos2d::Application::getInstance()->applicationWillEnterForeground();
 }
 
 // Override to allow orientations other than the default portrait orientation.
@@ -134,7 +134,7 @@
 }
 
 - (void)showARControl {
-    cocos2d::Application::getInstance()->applicationDidEnterBackground();
+//    cocos2d::Application::getInstance()->applicationDidEnterBackground();
     
     arCtrl = [[ARControl alloc] initWithParentViewController:self];
     

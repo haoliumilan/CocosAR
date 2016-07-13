@@ -16,6 +16,11 @@ countries.
 #import <Vuforia/Trackable.h>
 #import <Vuforia/DataSet.h>
 #import <Vuforia/CameraDevice.h>
+#import <Vuforia/Renderer.h>
+#import <Vuforia/TrackableResult.h>
+#import "SampleApplicationUtils.h"
+#import <Vuforia/Frame.h>
+#import <Vuforia/Image.h>
 
 @interface ARControl ()
 
@@ -23,7 +28,7 @@ countries.
 
 @implementation ARControl
 
-@synthesize vapp, eaglView;
+@synthesize vapp;
 
 - (id)initWithParentViewController:(UIViewController *)viewCtrl
 {
@@ -33,11 +38,6 @@ countries.
     vapp = [[SampleApplicationSession alloc] initWithDelegate:self];
     
     CGRect viewFrame = [self getCurrentARViewFrame];
-    
-    eaglView = [[ImageTargetsEAGLView3 alloc] initWithFrame:viewFrame appSession:vapp];
-//    [viewCtrl.view addSubview:eaglView];
-    AppController *appDelegate = (AppController*)[[UIApplication sharedApplication] delegate];
-    appDelegate.glResourceHandler = eaglView;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(dismissARViewController)
@@ -60,29 +60,8 @@ countries.
     // initialize AR
     [vapp initAR:Vuforia::GL_20 orientation:viewCtrl.interfaceOrientation];
     
-    // show loading animation while AR is being initialized
-    [self showLoadingAnimation];
-    
-    [self showBackBtn];
-    
     return self;
 }
-
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    
-//    [vapp stopAR:nil];
-//    
-//    // Be a good OpenGL ES citizen: now that Vuforia is paused and the render
-//    // thread is not executing, inform the root view controller that the
-//    // EAGLView should finish any OpenGL ES commands
-//    [self finishOpenGLESCommands];
-//    
-//    AppController *appDelegate = (AppController*)[[UIApplication sharedApplication] delegate];
-//    appDelegate.glResourceHandler = nil;
-//    
-//    [super viewWillDisappear:animated];
-//}
 
 - (void)dealloc
 {
@@ -93,8 +72,7 @@ countries.
 #pragma mark - SampleApplicationControl
 // callback called when the initailization of the AR is done
 - (void) onInitARDone:(NSError *)initError {
-    [self hideLoadingAnimation];
-    
+    NSLog(@"onInitARDone");
     if (initError == nil) {
         NSError * error = nil;
         [vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_BACK error:&error];
@@ -201,46 +179,6 @@ countries.
 }
 
 #pragma mark -
-- (void) showLoadingAnimation {
-    CGRect indicatorBounds;
-    CGRect mainBounds = [[UIScreen mainScreen] bounds];
-    int smallerBoundsSize = MIN(mainBounds.size.width, mainBounds.size.height);
-    int largerBoundsSize = MAX(mainBounds.size.width, mainBounds.size.height);
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown ) {
-        indicatorBounds = CGRectMake(smallerBoundsSize / 2 - 12,
-                                     largerBoundsSize / 2 - 12, 24, 24);
-    }
-    else {
-        indicatorBounds = CGRectMake(largerBoundsSize / 2 - 12,
-                                     smallerBoundsSize / 2 - 12, 24, 24);
-    }
-    
-    UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc]
-                                                 initWithFrame:indicatorBounds];
-    
-    loadingIndicator.tag  = 1;
-    loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-    [eaglView addSubview:loadingIndicator];
-    [loadingIndicator startAnimating];
-}
-
-- (void) hideLoadingAnimation {
-    UIActivityIndicatorView *loadingIndicator = (UIActivityIndicatorView *)[eaglView viewWithTag:1];
-    [loadingIndicator removeFromSuperview];
-}
-
-- (void)showBackBtn {
-    UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10.0, 30.0, 60.0, 35.0)];
-    [eaglView addSubview:backBtn];
-    [backBtn setImage:[UIImage imageNamed:@"res/btn_back.png"] forState:UIControlStateNormal];
-    [backBtn addTarget:self action:@selector(backBtnCb:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)backBtnCb:(id)sender {
-    [self dismissARViewController];
-}
-
 - (void) pauseAR {
     NSError * error = nil;
     if (![vapp pauseAR:&error]) {
@@ -255,13 +193,6 @@ countries.
     }
     // on resume, we reset the flash
     Vuforia::CameraDevice::getInstance().setFlashTorchMode(false);
-}
-
-
-- (void)dismissARViewController
-{
-    [eaglView removeFromSuperview];
-    eaglView = nil;
 }
 
 // Load the image tracker data set
@@ -325,21 +256,30 @@ countries.
     return viewFrame;
 }
 
-- (void)finishOpenGLESCommands
-{
-    // Called in response to applicationWillResignActive.  Inform the EAGLView
-    [eaglView finishOpenGLESCommands];
-}
-
-- (void)freeOpenGLESResources
-{
-    // Called in response to applicationDidEnterBackground.  Inform the EAGLView
-    [eaglView freeOpenGLESResources];
-}
-
 - (void)getARResult
 {
-    [eaglView getARResult];
+    NSLog(@"getARResult");
+    // Render video background and retrieve tracking state
+    Vuforia::State state = Vuforia::Renderer::getInstance().begin();
+    Vuforia::Renderer::getInstance().drawVideoBackground();
+    NSLog(@"state.getNumTrackables() = %d", state.getNumTrackables());
+    Vuforia::Frame frame = state.getFrame();
+    NSLog(@"frame.getNumImages() = %d", frame.getNumImages());
+    const Vuforia::Image *oneImage = frame.getImage(0);
+    NSLog(@"oneImage.getWidth() = %d, oneImage.getBufferWidth() = %d", oneImage->getWidth(), oneImage->getBufferWidth());
+    NSLog(@"oneImage->getHeight() = %d, oneImage->getBufferHeight() = %d", oneImage->getHeight(), oneImage->getBufferHeight());
+
+    for (int i = 0; i < state.getNumTrackableResults(); ++i) {
+        // Get the trackable
+        const Vuforia::TrackableResult* result = state.getTrackableResult(i);
+        const Vuforia::Trackable& trackable = result->getTrackable();
+        NSLog(@"trackable.getName() = %s", trackable.getName());
+        
+        SampleApplicationUtils::checkGlError("EAGLView renderFrameVuforia");
+    }
+    
+    Vuforia::Renderer::getInstance().end();
+    
 }
 
 

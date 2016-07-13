@@ -25,6 +25,7 @@ Scene* HelloWorld::createScene()
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
+    isShow = false;
     /**  you can create scene with following comment code instead of using csb file.
     // 1. super init first
     if ( !Layer::init() )
@@ -98,17 +99,42 @@ bool HelloWorld::init()
     
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width,
                                 origin.y + closeItem->getContentSize().height));
+    closeItem->setScale(2.0);
     
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
     
+    backgroudSp = NULL;
+    
+    this->scheduleUpdate();
+    
     return true;
+}
+
+void HelloWorld::update(float delta)
+{
+    Texture2D *tex = OcUtility::getInstance()->getARTexture2D();
+    if (tex != NULL) {
+        if (backgroudSp == NULL) {
+            backgroudSp = Sprite::createWithTexture(tex);
+            Size visibleSize = Director::getInstance()->getVisibleSize();
+            backgroudSp->setPosition(visibleSize.width/2, visibleSize.height/2);
+            this->addChild(backgroudSp);
+        } else {
+            backgroudSp->setTexture(tex);
+        }
+    }
 }
 
 void HelloWorld::menuCloseCallback(Ref* sender)
 {
-    OcUtility::getInstance()->showARControl();
+    if (isShow == false) {
+        OcUtility::getInstance()->showARControl();
+        //    OcUtility::getInstance()->showARViewController();
+        isShow = true;
+    }
+    
 }
 

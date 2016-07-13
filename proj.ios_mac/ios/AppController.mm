@@ -79,9 +79,9 @@ static AppDelegate s_sharedApplication;
 
     [window makeKeyAndVisible];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-    [imageView setImage:[UIImage imageNamed:@"Icon-100.png"]];
-    [_viewController.view addSubview:imageView];
+//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+//    [imageView setImage:[UIImage imageNamed:@"Icon-100.png"]];
+//    [_viewController.view addSubview:imageView];
     [_viewController.view setBackgroundColor:[UIColor orangeColor]];
     
     [[UIApplication sharedApplication] setStatusBarHidden:true];
@@ -92,7 +92,7 @@ static AppDelegate s_sharedApplication;
     
     app->run();
     
-//    [_viewController showARViewController];
+//    [_viewController showARControl];
     
     return YES;
 }

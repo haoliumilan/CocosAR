@@ -5,6 +5,8 @@
 
 class HelloWorld : public cocos2d::Layer
 {
+    bool isShow;
+    cocos2d::Sprite *backgroudSp;
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
@@ -16,9 +18,10 @@ public:
     CREATE_FUNC(HelloWorld);
     
     void menuCloseCallback(Ref* sender);
-    
+        
     void doNothing(cocos2d::Ref *sender);
 
+    void update(float delta);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

@@ -34,7 +34,7 @@ countries.
     
     CGRect viewFrame = [self getCurrentARViewFrame];
     
-    eaglView = [[ImageTargetsEAGLView alloc] initWithFrame:viewFrame appSession:vapp];
+    eaglView = [[ImageTargetsEAGLView2 alloc] initWithFrame:viewFrame appSession:vapp];
     [self setView:eaglView];
     AppController *appDelegate = (AppController*)[[UIApplication sharedApplication] delegate];
     appDelegate.glResourceHandler = eaglView;

@@ -8,3 +8,6 @@
 第一次使用，用来记录CocosAR的开发过程。   
 目前可以支持从cocos2d界面跳转到oc界面来使用AR，oc界面现在可以显示摄像头拍摄的画面，识别target，但是不能显示出那个茶壶。   
 ImageTargetsEAGLView不add到父节点上，renderFrameVuforia方法将不会被vuforia自动调用，但这个时候可以手动获取到AR扫描的结果。根据log的显示，龙狼AR应该是这个思路，下一步就是要把镜头中的纹理传到cocos2dx的代码中。
+
+## 20160713
+方向错了，可以通过State, Frame, Image获取到镜头的纹理信息，符合龙狼AR的逻辑。现在可以显示出来镜头的纹理，但是颜色、大小等参数还不对。方向是OK的。

@@ -23,6 +23,8 @@ public:
     void showARControl();
     
     void showOne();
+    
+    cocos2d::Texture2D *getARTexture2D();
 };
 
 #endif /* OcUtility_hpp */

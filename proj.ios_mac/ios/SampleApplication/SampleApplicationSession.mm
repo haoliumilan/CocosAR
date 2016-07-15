@@ -131,7 +131,7 @@ namespace {
         do {
             initSuccess = Vuforia::init();
         } while (0 <= initSuccess && 100 > initSuccess);
-        
+
         if (100 == initSuccess) {
             // We can now continue the initialization of Vuforia
             // (on the main thread)

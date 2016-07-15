@@ -134,6 +134,8 @@ void HelloWorld::menuCloseCallback(Ref* sender)
         OcUtility::getInstance()->showARControl();
         //    OcUtility::getInstance()->showARViewController();
         isShow = true;
+    } else {
+        update(0);
     }
     
 }

@@ -11,3 +11,6 @@ ImageTargetsEAGLView不add到父节点上，renderFrameVuforia方法将不会被
 
 ## 20160713
 方向错了，可以通过State, Frame, Image获取到镜头的纹理信息，符合龙狼AR的逻辑。现在可以显示出来镜头的纹理，但是颜色、大小等参数还不对。方向是OK的。
+
+## 20160715
+纹理的颜色搞定了，需要Vuforia::setFrameFormat(Vuforia::RGB565, YES)来设置纹理类型。

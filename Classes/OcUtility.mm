@@ -56,6 +56,8 @@ cocos2d::Texture2D *OcUtility::getARTexture2D()
     cocos2d::Texture2D* texture2d = new cocos2d::Texture2D();
     // Render video background and retrieve tracking state
     Vuforia::State state = Vuforia::Renderer::getInstance().begin();
+    Vuforia::setFrameFormat(Vuforia::RGB565, YES);
+
     NSLog(@"state.getNumTrackables() = %d", state.getNumTrackables());
     Vuforia::Frame frame = state.getFrame();
     int num = frame.getNumImages();
@@ -69,8 +71,16 @@ cocos2d::Texture2D *OcUtility::getARTexture2D()
         NSLog(@"oneImage.getWidth() = %d, oneImage.getBufferWidth() = %d", oneImage->getWidth(), oneImage->getBufferWidth());
         NSLog(@"oneImage->getHeight() = %d, oneImage->getBufferHeight() = %d", oneImage->getHeight(), oneImage->getBufferHeight());
         NSLog(@"oneImage->getStride() = %d, oneImage->getFormat() = %d", oneImage->getStride(), oneImage->getFormat());
+        
+        if (i == 0) {
+            texture2d->initWithData(oneImage->getPixels(),
+                                    oneImage->getBufferWidth() * oneImage->getBufferHeight() * 2,
+                                    Texture2D::PixelFormat::RGB565,
+                                    oneImage->getBufferWidth(),
+                                    oneImage->getBufferHeight(),
+                                    cocos2d::Size(oneImage->getBufferWidth(), oneImage->getBufferHeight()));
+        }
     }
-    texture2d->initWithData(oneImage->getPixels(), 614400, Texture2D::PixelFormat::A8, 640, 480, cocos2d::Size(640, 480));
     
     for (int i = 0; i < state.getNumTrackableResults(); ++i) {
         // Get the trackable

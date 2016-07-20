@@ -14,7 +14,8 @@
 class OcUtility
 {
     static OcUtility* s_pcIf;
-
+    cocos2d::Mat4 targetMat = cocos2d::Mat4::IDENTITY;
+    bool isTarget = false;
 public:
     static OcUtility* getInstance();
     
@@ -25,6 +26,11 @@ public:
     void showOne();
     
     cocos2d::Texture2D *getARTexture2D();
+    
+    void printMatrix(const float* mat);
+
+    cocos2d::Mat4 getTargetMat();
+    bool getIsTarget();
 };
 
 #endif /* OcUtility_hpp */

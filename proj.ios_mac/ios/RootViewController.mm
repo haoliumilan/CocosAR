@@ -144,6 +144,10 @@
     [arBtn addTarget:self action:@selector(ARBtnCb:) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (ARControl *)getARControl {
+    return arCtrl;
+}
+
 - (void)ARBtnCb:(id)sender {
     [arCtrl getARResult];
 }

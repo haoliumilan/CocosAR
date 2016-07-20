@@ -14,3 +14,6 @@ ImageTargetsEAGLView不add到父节点上，renderFrameVuforia方法将不会被
 
 ## 20160715
 纹理的颜色搞定了，需要Vuforia::setFrameFormat(Vuforia::RGB565, YES)来设置纹理类型。
+
+## 20160719
+Vuforia返回的4阶矩阵可以通过cocos的方法解析成位移、放缩、旋转属性，但是还是不能直接使用。另外旋转属性获得的是一个四元数，还无法直接变成角度。

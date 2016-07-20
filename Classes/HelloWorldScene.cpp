@@ -106,26 +106,69 @@ bool HelloWorld::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
     
-    backgroudSp = NULL;
+    spBackgroud = NULL;
     
+    spMonster = Sprite3D::create("res/model_1.c3t");
+    this->addChild(spMonster);
+    spMonster->setGlobalZOrder(1);
+    spMonster->setPosition(visibleSize.width/2, visibleSize.height/2);
+    spMonster->setScale(10);
+//    spMonster->setRotation3D(Vec3(0, 45, 0));
+
+    Mat4 mat;
+//    mat = Mat4(10.000, 0.000, 0.000, 480.000, 0.000, 10.000, 0.000, 320.000, 0.000, 0.000, 10.000, 0.000, 0.000, 0.000, 0.000, 1.000);
+//    spMonster->setNodeToParentTransform(mat);
+//
+    mat = spMonster->getNodeToParentTransform();
+    OcUtility::getInstance()->printMatrix(mat.m);
+    
+    Vec3 scale;
+    mat.getScale(&scale);
+    log("scale = %f, %f, %f", scale.x, scale.y, scale.z);
+    
+    Quaternion rotat;
+    mat.getRotation(&rotat);
+    log("quat = %f, %f, %f, %f", rotat.x, rotat.y, rotat.z, rotat.w);
+    
+    Vec3 trans;
+    mat.getTranslation(&trans);
+    log("trans = %f, %f, %f", trans.x, trans.y, trans.z);
+    
+    mat = this->getNodeToParentTransform();
+    OcUtility::getInstance()->printMatrix(mat.m);
+
     this->scheduleUpdate();
-    
+
     return true;
 }
 
 void HelloWorld::update(float delta)
 {
     Texture2D *tex = OcUtility::getInstance()->getARTexture2D();
+    Size visibleSize = Director::getInstance()->getVisibleSize();
     if (tex != NULL) {
-        if (backgroudSp == NULL) {
-            backgroudSp = Sprite::createWithTexture(tex);
-            Size visibleSize = Director::getInstance()->getVisibleSize();
-            backgroudSp->setPosition(visibleSize.width/2, visibleSize.height/2);
-            this->addChild(backgroudSp);
+        if (spBackgroud == NULL) {
+            spBackgroud = Sprite::createWithTexture(tex);
+            spBackgroud->setPosition(visibleSize.width/2, visibleSize.height/2);
+            this->addChild(spBackgroud);
         } else {
-            backgroudSp->setTexture(tex);
+            spBackgroud->setTexture(tex);
         }
     }
+    
+    if (OcUtility::getInstance()->getIsTarget() == true) {
+        Mat4 mat = OcUtility::getInstance()->getTargetMat();
+//        spMonster->setNodeToParentTransform(mat);
+        Vec3 scale;
+        Quaternion rotat;
+        Vec3 trans;
+        mat.decompose(&scale, &rotat, &trans);
+        
+        log("scale = %f, %f, %f", scale.x, scale.y, scale.z);
+        log("quat = %f, %f, %f, %f", rotat.x, rotat.y, rotat.z, rotat.w);
+        log("trans = %f, %f, %f", trans.x, trans.y, trans.z);
+    }
+
 }
 
 void HelloWorld::menuCloseCallback(Ref* sender)

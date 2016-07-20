@@ -29,6 +29,9 @@
 @interface RootViewController : UIViewController {
     ARControl *arCtrl;
 }
+
+- (ARControl *)getARControl;
+
 - (BOOL)prefersStatusBarHidden;
 
 - (void)showARViewController;

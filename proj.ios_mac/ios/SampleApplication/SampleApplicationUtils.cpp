@@ -21,7 +21,15 @@ namespace SampleApplicationUtils
             printf("%7.3f %7.3f %7.3f %7.3f", mat[0], mat[1], mat[2], mat[3]);
         }
     }
-    
+
+    void
+    printMatrix34(const float* mat)
+    {
+        for (int r = 0; r < 3; r++, mat += 4) {
+            printf("%7.3f %7.3f %7.3f %7.3f ", mat[0], mat[1], mat[2], mat[4]);
+        }
+    }
+
     
     // Print GL error information
     void

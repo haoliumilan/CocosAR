@@ -19,6 +19,9 @@ namespace SampleApplicationUtils
 {
     // Print a 4x4 matrix
     void printMatrix(const float* matrix);
+
+    // Print a 3x4 matrix
+    void printMatrix34(const float* matrix);
     
     // Print GL error information
     void checkGlError(const char* operation);

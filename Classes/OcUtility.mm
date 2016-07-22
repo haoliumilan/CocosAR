@@ -85,14 +85,13 @@ cocos2d::Texture2D *OcUtility::getARTexture2D()
         const Vuforia::TrackableResult* result = state.getTrackableResult(i);
         const Vuforia::Trackable& trackable = result->getTrackable();
         NSLog(@"trackable.getName() = %s", trackable.getName());
+        
         Vuforia::Matrix44F modelViewProjection;
-        Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
+        Vuforia::Matrix34F matrix34 = result->getPose();
+        Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(matrix34);
         AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
         ARControl *arCtrl = [appCtrl.viewController getARControl];
-        SampleApplicationUtils::translatePoseMatrix(0.0f, 0.0f, 10, &modelViewMatrix.data[0]);
-        SampleApplicationUtils::scalePoseMatrix(10, 10, 10, &modelViewMatrix.data[0]);
         SampleApplicationUtils::multiplyMatrix(&arCtrl.vapp.projectionMatrix.data[0], &modelViewMatrix.data[0], &modelViewProjection.data[0]);
-        SampleApplicationUtils::printMatrix(modelViewProjection.data);
         targetMat = Mat4(modelViewProjection.data);
         isTarget = true;
     }
@@ -105,8 +104,8 @@ cocos2d::Texture2D *OcUtility::getARTexture2D()
 
 void OcUtility::printMatrix(const float* mat)
 {
-    for (int r = 0; r < 4; r++, mat += 4) {
-        printf("%7.3f %7.3f %7.3f %7.3f ", mat[0], mat[1], mat[2], mat[3]);
+    for (int r = 0; r < 4; r++) {
+        log("%7.3f %7.3f %7.3f %7.3f ", mat[r], mat[r+4], mat[r+8], mat[r+12]);
     }
 }
 
@@ -120,6 +119,36 @@ bool OcUtility::getIsTarget()
     return isTarget;
 }
 
+//convert quaternion to Euler angle
+void OcUtility::getRotat3DFromQuat(Vec3 *rotat3D, Quaternion *rotatQuat)
+{
+    float x = rotatQuat->x, y = rotatQuat->y, z = rotatQuat->z, w = rotatQuat->w;
+    rotat3D->x = atan2f(2.f * (w * x + y * z), 1.f - 2.f * (x * x + y * y));
+    float sy = 2.f * (w * y - z * x);
+    if ((sy > 1) || (sy < -1)) {
+        log("sy = %f", sy);
+    }
+    sy = clampf(sy, -1, 1);
+    rotat3D->y = asinf(sy);
+    rotat3D->z = atan2f(2.f * (w * z + x * y), 1.f - 2.f * (y * y + z * z));
+    
+    rotat3D->x = CC_RADIANS_TO_DEGREES(rotat3D->x);
+    rotat3D->y = CC_RADIANS_TO_DEGREES(rotat3D->y);
+    rotat3D->z = -CC_RADIANS_TO_DEGREES(rotat3D->z);
+    
+}
+
+//convert Euler angle to quaternion
+void OcUtility::getRotatQuatFrom3D(cocos2d::Quaternion *rotatQuat, cocos2d::Vec3 *rotat3D)
+{
+    float halfRadx = CC_DEGREES_TO_RADIANS(rotat3D->x / 2.f), halfRady = CC_DEGREES_TO_RADIANS(rotat3D->y / 2.f), halfRadz = -CC_DEGREES_TO_RADIANS(rotat3D->z / 2.f);
+    float coshalfRadx = cosf(halfRadx), sinhalfRadx = sinf(halfRadx), coshalfRady = cosf(halfRady), sinhalfRady = sinf(halfRady), coshalfRadz = cosf(halfRadz), sinhalfRadz = sinf(halfRadz);
+    rotatQuat->x = sinhalfRadx * coshalfRady * coshalfRadz - coshalfRadx * sinhalfRady * sinhalfRadz;
+    rotatQuat->y = coshalfRadx * sinhalfRady * coshalfRadz + sinhalfRadx * coshalfRady * sinhalfRadz;
+    rotatQuat->z = coshalfRadx * coshalfRady * sinhalfRadz - sinhalfRadx * sinhalfRady * coshalfRadz;
+    rotatQuat->w = coshalfRadx * coshalfRady * coshalfRadz + sinhalfRadx * sinhalfRady * sinhalfRadz;
+
+}
 
 
 

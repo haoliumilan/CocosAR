@@ -17,3 +17,6 @@ ImageTargetsEAGLView不add到父节点上，renderFrameVuforia方法将不会被
 
 ## 20160719
 Vuforia返回的4阶矩阵可以通过cocos的方法解析成位移、放缩、旋转属性，但是还是不能直接使用。另外旋转属性获得的是一个四元数，还无法直接变成角度。
+
+## 20160722
+简单的把Vuforia和cocos做了组合，目前2个系统还是各自为政，不能再统一个窗口中使用。但是已经可以看到茶壶，在cocos和vuforia之间来回跳转

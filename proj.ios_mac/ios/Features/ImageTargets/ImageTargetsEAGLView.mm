@@ -47,6 +47,7 @@ countries.
 
 namespace {
     // --- Data private to this unit ---
+    const char* textureFilename = "res/TextureTeapotBrass.png";
     
     // Model scale factor
     const float kObjectScaleNormal = 3.0f;
@@ -89,7 +90,10 @@ namespace {
         if (YES == [vapp isRetinaDisplay]) {
             [self setContentScaleFactor:[UIScreen mainScreen].nativeScale];
         }
-        context = [EAGLContext currentContext];
+        
+        augmentationTexture = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilename encoding:NSASCIIStringEncoding]];
+        
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         
     }
     
@@ -159,7 +163,33 @@ namespace {
         const Vuforia::TrackableResult* result = state.getTrackableResult(i);
         const Vuforia::Trackable& trackable = result->getTrackable();
         NSLog(@"trackable.getName() = %s", trackable.getName());
-                
+        
+
+        Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
+        Vuforia::Matrix44F modelViewProjection;
+        
+        SampleApplicationUtils::translatePoseMatrix(0.0f, 0.0f, kObjectScaleNormal, &modelViewMatrix.data[0]);
+        SampleApplicationUtils::scalePoseMatrix(kObjectScaleNormal, kObjectScaleNormal, kObjectScaleNormal, &modelViewMatrix.data[0]);
+        SampleApplicationUtils::multiplyMatrix(&vapp.projectionMatrix.data[0], &modelViewMatrix.data[0], &modelViewProjection.data[0]);
+        glUseProgram(shaderProgramID);
+        
+        glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)teapotVertices);
+        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)teapotNormals);
+        glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)teapotTexCoords);
+        glEnableVertexAttribArray(vertexHandle);
+        glEnableVertexAttribArray(normalHandle);
+        glEnableVertexAttribArray(textureCoordHandle);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, augmentationTexture.textureID);
+        glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)&modelViewProjection.data[0]);
+        glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
+        glDrawElements(GL_TRIANGLES, NUM_TEAPOT_OBJECT_INDEX, GL_UNSIGNED_SHORT, (const GLvoid*)teapotIndices);
+
+        glDisableVertexAttribArray(vertexHandle);
+        glDisableVertexAttribArray(normalHandle);
+        glDisableVertexAttribArray(textureCoordHandle);
+        
         SampleApplicationUtils::checkGlError("EAGLView renderFrameVuforia");
     }
     
@@ -172,6 +202,23 @@ namespace {
 
 //------------------------------------------------------------------------------
 #pragma mark - OpenGL ES management
+- (void)initShaders
+{
+    shaderProgramID = [SampleApplicationShaderUtils createProgramWithVertexShaderFileName:@"Simple.vertsh"
+                                                   fragmentShaderFileName:@"Simple.fragsh"];
+
+    if (0 < shaderProgramID) {
+        vertexHandle = glGetAttribLocation(shaderProgramID, "vertexPosition");
+        normalHandle = glGetAttribLocation(shaderProgramID, "vertexNormal");
+        textureCoordHandle = glGetAttribLocation(shaderProgramID, "vertexTexCoord");
+        mvpMatrixHandle = glGetUniformLocation(shaderProgramID, "modelViewProjectionMatrix");
+        texSampler2DHandle  = glGetUniformLocation(shaderProgramID,"texSampler2D");
+    }
+    else {
+        NSLog(@"Could not initialise augmentation shader");
+    }
+}
+
 
 - (void)createFramebuffer
 {
@@ -235,13 +282,23 @@ namespace {
     // it the first time this method is called (on the render thread)
     if (context != [EAGLContext currentContext]) {
         [EAGLContext setCurrentContext:context];
+        
+        GLuint textureID;
+        glGenTextures(1, &textureID);
+        [augmentationTexture setTextureID:textureID];
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture width], [augmentationTexture height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture pngData]);
+        
+        [self initShaders];
     }
     
     if (!defaultFramebuffer) {
         // Perform on the main thread to ensure safe memory allocation for the
         // shared buffer.  Block until the operation is complete to prevent
         // simultaneous access to the OpenGL context
-        [self performSelectorOnMainThread:@selector(createFramebuffer) withObject:self waitUntilDone:YES];
+        [self performSelector:@selector(createFramebuffer) onThread:[NSThread currentThread] withObject:self waitUntilDone:YES];
     }
     
     glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);

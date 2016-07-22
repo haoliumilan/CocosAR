@@ -28,7 +28,17 @@ countries.
     GLuint defaultFramebuffer;
     GLuint colorRenderbuffer;
     GLuint depthRenderbuffer;
-        
+    
+    // Shader handles
+    GLuint shaderProgramID;
+    GLint vertexHandle;
+    GLint normalHandle;
+    GLint textureCoordHandle;
+    GLint mvpMatrixHandle;
+    GLint texSampler2DHandle;
+    
+    // Texture used when rendering augmentation
+    Texture* augmentationTexture;
 }
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;

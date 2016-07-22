@@ -34,7 +34,7 @@ countries.
     
     CGRect viewFrame = [self getCurrentARViewFrame];
     
-    eaglView = [[ImageTargetsEAGLView2 alloc] initWithFrame:viewFrame appSession:vapp];
+    eaglView = [[ImageTargetsEAGLView alloc] initWithFrame:viewFrame appSession:vapp];
     [self setView:eaglView];
     AppController *appDelegate = (AppController*)[[UIApplication sharedApplication] delegate];
     appDelegate.glResourceHandler = eaglView;
@@ -276,6 +276,8 @@ countries.
 {
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self dismissViewControllerAnimated:NO completion:nil];
+    
+    cocos2d::Application::getInstance()->applicationWillEnterForeground();
 }
 
 // Load the image tracker data set

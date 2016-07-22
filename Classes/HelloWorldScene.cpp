@@ -93,8 +93,8 @@ bool HelloWorld::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
+                                           "res/CloseNormal.png",
+                                           "res/CloseSelected.png",
                                            CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
     
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width,
@@ -173,13 +173,15 @@ void HelloWorld::update(float delta)
 
 void HelloWorld::menuCloseCallback(Ref* sender)
 {
-    if (isShow == false) {
-        OcUtility::getInstance()->showARControl();
-        //    OcUtility::getInstance()->showARViewController();
-        isShow = true;
-    } else {
-        update(0);
-    }
+    OcUtility::getInstance()->showARViewController();
+    
+//    if (isShow == false) {
+//        OcUtility::getInstance()->showARViewController();
+//        //    OcUtility::getInstance()->showARViewController();
+//        isShow = true;
+//    } else {
+//        update(0);
+//    }
     
 }
 

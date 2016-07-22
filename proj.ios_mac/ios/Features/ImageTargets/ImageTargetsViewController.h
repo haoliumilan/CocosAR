@@ -8,7 +8,7 @@ countries.
 ===============================================================================*/
 
 #import <UIKit/UIKit.h>
-#import "ImageTargetsEAGLView2.h"
+#import "ImageTargetsEAGLView.h"
 #import "SampleApplicationSession.h"
 #import <Vuforia/DataSet.h>
 
@@ -18,7 +18,7 @@ countries.
     
 }
 
-@property (nonatomic, strong) ImageTargetsEAGLView2* eaglView;
+@property (nonatomic, strong) ImageTargetsEAGLView* eaglView;
 @property (nonatomic, strong) SampleApplicationSession * vapp;
 
 @end

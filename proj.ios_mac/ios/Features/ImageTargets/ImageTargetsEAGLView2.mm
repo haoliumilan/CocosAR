@@ -97,10 +97,10 @@ namespace {
         // Load the augmentation textures
         augmentationTexture = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilename encoding:NSASCIIStringEncoding]];
         
-        context = [EAGLContext currentContext];
+//        context = [EAGLContext currentContext];
 //        // Create the OpenGL ES context
-//        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-//        
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+//
 //        // The EAGLContext must be set for each thread that wishes to use it.
 //        // Set it the first time this method is called (on the main thread)
 //        if (context != [EAGLContext currentContext]) {
@@ -109,15 +109,6 @@ namespace {
         
         // Generate the OpenGL ES texture and upload the texture data for use
         // when rendering the augmentation
-        GLuint textureID;
-        glGenTextures(1, &textureID);
-        [augmentationTexture setTextureID:textureID];
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture width], [augmentationTexture height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture pngData]);
-        
-        [self initShaders];
         
     }
     
@@ -327,13 +318,25 @@ namespace {
     // it the first time this method is called (on the render thread)
     if (context != [EAGLContext currentContext]) {
         [EAGLContext setCurrentContext:context];
+
+        GLuint textureID;
+        glGenTextures(1, &textureID);
+        [augmentationTexture setTextureID:textureID];
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture width], [augmentationTexture height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture pngData]);
+        
+        [self initShaders];
+
     }
     
     if (!defaultFramebuffer) {
         // Perform on the main thread to ensure safe memory allocation for the
         // shared buffer.  Block until the operation is complete to prevent
         // simultaneous access to the OpenGL context
-        [self performSelectorOnMainThread:@selector(createFramebuffer) withObject:self waitUntilDone:YES];
+//        [self performSelectorOnMainThread:@selector(createFramebuffer) withObject:self waitUntilDone:YES];
+        [self performSelector:@selector(createFramebuffer) onThread:[NSThread currentThread] withObject:self waitUntilDone:YES];
     }
     
     glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);

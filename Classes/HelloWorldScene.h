@@ -5,7 +5,6 @@
 
 class HelloWorld : public cocos2d::Layer
 {
-    bool isShow;
     cocos2d::Sprite *spBackgroud;
     cocos2d::Sprite3D *spMonster;
 public:
@@ -21,6 +20,8 @@ public:
     void menuCloseCallback(Ref* sender);
         
     void update(float delta);
+    
+    void showSomeMonster();
     
 };
 

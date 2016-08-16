@@ -136,12 +136,7 @@
 - (void)showARControl {
 //    cocos2d::Application::getInstance()->applicationDidEnterBackground();
     
-    arCtrl = [[ARControl alloc] initWithParentViewController:self];
-    
-    UIButton *arBtn = [[UIButton alloc] initWithFrame:CGRectMake(200, 200, 100, 100)];
-    [self.view addSubview:arBtn];
-    [arBtn setTitle:@"Result" forState:UIControlStateNormal];
-    [arBtn addTarget:self action:@selector(ARBtnCb:) forControlEvents:UIControlEventTouchUpInside];
+    arCtrl = [[ARControl alloc] initWithParentViewController:self];    
 }
 
 - (ARControl *)getARControl {

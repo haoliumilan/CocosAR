@@ -25,7 +25,6 @@ Scene* HelloWorld::createScene()
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
-    isShow = false;
     /**  you can create scene with following comment code instead of using csb file.
     // 1. super init first
     if ( !Layer::init() )
@@ -100,23 +99,25 @@ bool HelloWorld::init()
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width,
                                 origin.y + closeItem->getContentSize().height));
     closeItem->setScale(2.0);
+    closeItem->setTag(1);
+
+    auto closeItem2 = MenuItemImage::create(
+                                           "CloseNormal.png",
+                                           "CloseSelected.png",
+                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
+    
+    closeItem2->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width*5,
+                                origin.y + closeItem->getContentSize().height));
+    closeItem2->setScale(2.0);
+    closeItem2->setTag(2);
     
     // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
+    auto menu = Menu::create(closeItem, closeItem2, NULL);
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
     
     spBackgroud = NULL;
-
-    spMonster = Sprite3D::create("res/model_1.c3t");
-    this->addChild(spMonster);
-    spMonster->setGlobalZOrder(1);
-    spMonster->setPosition3D(Vec3(visibleSize.width/2, visibleSize.height/2, 0));
-    spMonster->setScale(10);
-    spMonster->setRotation3D(Vec3(45, 0, 0));
-    
-    
-    this->scheduleUpdate();
+    spMonster = NULL;
 
     return true;
 }
@@ -148,26 +149,72 @@ void HelloWorld::update(float delta)
         OcUtility::getInstance()->getRotat3DFromQuat(&angle, &quat);
         log("angle = %f, %f, %f", angle.x, angle.y, angle.z);
         
-        spMonster->setPosition3D(Vec3(visibleSize.width/2+trans.x, visibleSize.height/2+trans.y, 600 - trans.z));
-        spMonster->setScaleX(scale.x*3);
-        spMonster->setScaleY(scale.y*3);
-        spMonster->setScaleZ(scale.z*3);
-//        spMonster->setRotationQuat(quat);
-        spMonster->setRotation3D(Vec3(angle.x, 180-angle.y, angle.z));
-//        spMonster->setNodeToParentTransform(mat);
+        if (spMonster == NULL) {
+            spMonster = Sprite3D::create("res/model_1.c3t");
+            this->addChild(spMonster);
+            spMonster->setGlobalZOrder(1);
+        }
 
+        spMonster->setPosition3D(Vec3(visibleSize.width/2+trans.x, visibleSize.height/2+trans.y, 600 - trans.z));
+        spMonster->setScaleX(6);
+        spMonster->setScaleY(6);
+        spMonster->setScaleZ(6);
+        spMonster->setRotation3D(Vec3(-angle.x + 90, -angle.y, angle.z));
+    } else {
+        if (spMonster != NULL) {
+            spMonster->removeFromParent();
+            spMonster = NULL;
+        }
     }
 
 }
 
+void HelloWorld::showSomeMonster() {
+    for (int i = 0; i < 20; i++) {
+        auto sp = Sprite3D::create("res/model_1.c3t");
+        this->addChild(sp);
+        sp->setGlobalZOrder(1);
+        sp->setScale(10);
+        float x = random(100, 500);
+        float y = random(100, 500);
+        sp->setPosition(Vec2(x, y));
+        sp->setTag(111);
+        
+        auto anim = Animation3D::create("res/motion_1.c3t", "Take 001");
+        if (anim) {
+            auto animate = Animate3D::create(anim);
+            animate->setQuality(Animate3DQuality::QUALITY_HIGH);
+            auto repeate = RepeatForever::create(animate);
+            sp->runAction(repeate);
+        }
+    }
+}
+
 void HelloWorld::menuCloseCallback(Ref* sender)
 {
-    if (isShow == false) {
+    MenuItemImage *item = (MenuItemImage *)sender;
+    if (item->getTag() == 1) {
+        auto sp = this->getChildByTag(111);
+        while (sp) {
+            sp->removeFromParent();
+            sp = NULL;
+            sp = this->getChildByTag(111);
+        }
+        
+        this->scheduleUpdate();
         OcUtility::getInstance()->showARControl();
-        //    OcUtility::getInstance()->showARViewController();
-        isShow = true;
     } else {
-        update(0);
+        if (spMonster != NULL) {
+            spMonster->removeFromParent();
+            spMonster = NULL;
+        }
+        if (spBackgroud != NULL) {
+            spBackgroud->removeFromParent();
+            spBackgroud = NULL;
+        }
+        
+        this->unscheduleUpdate();
+        this->showSomeMonster();
     }
     
 }

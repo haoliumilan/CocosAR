@@ -41,6 +41,9 @@ void OcUtility::showARViewController()
 
 void OcUtility::showARControl()
 {
+//    experimental::Viewport vp(0, -106, 1136, 852);
+//    Camera::setDefaultViewport(vp);
+    
     AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
     [appCtrl.viewController showARControl];
     
@@ -89,6 +92,11 @@ cocos2d::Texture2D *OcUtility::getARTexture2D()
         Vuforia::Matrix44F modelViewProjection;
         Vuforia::Matrix34F matrix34 = result->getPose();
         Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(matrix34);
+        
+//        float kObjectScaleNormal = 3.0f;
+//        SampleApplicationUtils::translatePoseMatrix(0.0f, 0.0f, kObjectScaleNormal, &modelViewMatrix.data[0]);
+//        SampleApplicationUtils::scalePoseMatrix(kObjectScaleNormal, kObjectScaleNormal, kObjectScaleNormal, &modelViewMatrix.data[0]);
+
         AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
         ARControl *arCtrl = [appCtrl.viewController getARControl];
         SampleApplicationUtils::multiplyMatrix(&arCtrl.vapp.projectionMatrix.data[0], &modelViewMatrix.data[0], &modelViewProjection.data[0]);
@@ -102,8 +110,16 @@ cocos2d::Texture2D *OcUtility::getARTexture2D()
     return texture2d;
 }
 
+cocos2d::Mat4 OcUtility::getProjectionMatrix()
+{
+    AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
+    ARControl *arCtrl = [appCtrl.viewController getARControl];
+    return Mat4(arCtrl.vapp.projectionMatrix.data);
+}
+
 void OcUtility::printMatrix(const float* mat)
 {
+    log("printMatrix ----");
     for (int r = 0; r < 4; r++) {
         log("%7.3f %7.3f %7.3f %7.3f ", mat[r], mat[r+4], mat[r+8], mat[r+12]);
     }

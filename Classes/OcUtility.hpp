@@ -35,7 +35,8 @@ public:
     void getRotat3DFromQuat(cocos2d::Vec3 *rotat3D, cocos2d::Quaternion *rotatQuat);
     
     void getRotatQuatFrom3D(cocos2d::Quaternion *rotatQuat, cocos2d::Vec3 *rotat3D);
-
+    
+    cocos2d::Mat4 getProjectionMatrix();
 };
 
 #endif /* OcUtility_hpp */

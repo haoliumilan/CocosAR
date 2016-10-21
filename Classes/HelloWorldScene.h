@@ -18,7 +18,11 @@ public:
     CREATE_FUNC(HelloWorld);
     
     void menuCloseCallback(Ref* sender);
-        
+    
+    void show3DMonsters();
+    
+    void showARMonster();
+    
     void update(float delta);
     
     void showSomeMonster();

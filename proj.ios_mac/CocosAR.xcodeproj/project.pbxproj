@@ -716,8 +716,9 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.CocosAR;
+				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.dragonwolf.jp;
 				PRODUCT_NAME = "CocosAR-mobile";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";
@@ -755,8 +756,9 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.CocosAR;
+				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.dragonwolf.jp;
 				PRODUCT_NAME = "CocosAR-mobile";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";

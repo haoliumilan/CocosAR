@@ -85,12 +85,13 @@ bool HelloWorld::init()
         return false;
     }
     
-    auto rootNode = CSLoader::createNode("MainScene.csb");
-
-    addChild(rootNode);
+//    auto rootNode = CSLoader::createNode("MainScene.csb");
+//
+//    addChild(rootNode);
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
                                            "CloseSelected.png",
@@ -118,7 +119,37 @@ bool HelloWorld::init()
     
     spBackgroud = NULL;
     spMonster = NULL;
-
+    
+    auto bg = Sprite::create("HelloWorld.png");
+    this->addChild(bg);
+    bg->setPosition(visibleSize.width*0.5, visibleSize.height*0.5);
+    
+//    orCamera = Camera::createOrthographic(visibleSize.width, visibleSize.height, 1, 1000);
+//    this->addChild(orCamera);
+//    orCamera->setCameraFlag(CameraFlag::USER1);
+//    float zeye = Director::getInstance()->getZEye();
+//    Vec3 eye(visibleSize.width/2, visibleSize.height/2.0f, zeye), center(visibleSize.width/2, visibleSize.height/2, 0.0f), up(0.0f, 1.0f, 0.0f);
+//    orCamera->setPosition3D(eye);
+//    orCamera->lookAt(center, up);
+    Mat4 mat = Mat4( 18.632, 0.046, 1.186, 3.814,
+                    -0.074, 14.048, 0.610, -33.859,
+                    -0.652,  -0.386,   9.971, -271.332,
+                    0.001,   0.000,  -0.011,   0.498 );
+    
+    auto spModel = Sprite3D::create("res/model_1.c3t");
+    this->addChild(spModel);
+    spModel->setGlobalZOrder(1);
+    spModel->setScaleX(6);
+    spModel->setScaleY(6);
+    spModel->setScaleZ(6);
+    spModel->setPosition3D(Vec3(visibleSize.width/2, visibleSize.height/2, visibleSize.height/2));
+//    spMonster->setRotation3D(Vec3(180, 0, 0));
+//    spMonster->setCameraMask(2);
+    
+    auto dNode = DrawNode::create();
+    this->addChild(dNode);
+    dNode->drawLine(Vec2(0, 0), Vec2(568, 320), Color4F(1, 0, 0, 1));
+        
     return true;
 }
 
@@ -139,27 +170,46 @@ void HelloWorld::update(float delta)
     
     if (OcUtility::getInstance()->getIsTarget() == true) {
         Mat4 mat = OcUtility::getInstance()->getTargetMat();
+        cocos2d::Mat4 cameraMat = cocos2d::Camera::getDefaultCamera()->getProjectionMatrix();
+        mat = cameraMat.getInversed() * mat;
+//        mat.translate(visibleSize.width/2, visibleSize.height/2, visibleSize.height/2);
+//        mat.scale(10, 10, 10);
+//        OcUtility::getInstance()->printMatrix(mat.m);
+        
         Vec3 scale;
         Quaternion quat;
         Vec3 trans;
         mat.decompose(&scale, &quat, &trans);
-        log("scale = %f, %f, %f", scale.x, scale.y, scale.z);
-        log("trans = %f, %f, %f", trans.x, trans.y, trans.z);
         Vec3 angle;
         OcUtility::getInstance()->getRotat3DFromQuat(&angle, &quat);
-        log("angle = %f, %f, %f", angle.x, angle.y, angle.z);
         
         if (spMonster == NULL) {
             spMonster = Sprite3D::create("res/model_1.c3t");
             this->addChild(spMonster);
             spMonster->setGlobalZOrder(1);
+//            spMonster->setCameraMask(2);
         }
-
-        spMonster->setPosition3D(Vec3(visibleSize.width/2+trans.x, visibleSize.height/2+trans.y, 600 - trans.z));
-        spMonster->setScaleX(6);
-        spMonster->setScaleY(6);
-        spMonster->setScaleZ(6);
-        spMonster->setRotation3D(Vec3(-angle.x + 90, -angle.y, angle.z));
+//        log("trans = %f, %f, %f", trans.x, trans.y, trans.z);
+        log("scale = %f, %f, %f", scale.x, scale.y, scale.z);
+        
+//        spMonster->setPosition3D(Vec3(trans.x, trans.y, trans.z));
+//        spMonster->setScaleX(scale.x);
+//        spMonster->setScaleY(scale.y);
+//        spMonster->setScaleZ(scale.z);
+//        spMonster->setRotationQuat(quat);
+//        OcUtility::getInstance()->printMatrix(spMonster->getNodeToParentTransform().m);
+        
+        spMonster->setScaleX(scale.x*10);
+        spMonster->setScaleY(scale.y*10*853/640);
+        spMonster->setScaleZ(scale.z*10);
+//        spMonster->setScaleX(6);
+//        spMonster->setScaleY(6);
+//        spMonster->setScaleZ(6);
+        spMonster->setPosition3D(Vec3(visibleSize.width/2+trans.x*2, visibleSize.height/2+trans.y*2, visibleSize.height/2+trans.z));
+        spMonster->setRotation3D(Vec3(angle.x, angle.y, angle.z));
+        
+//        spMonster->setNodeToParentTransform(mat);
+        
     } else {
         if (spMonster != NULL) {
             spMonster->removeFromParent();
@@ -194,28 +244,40 @@ void HelloWorld::menuCloseCallback(Ref* sender)
 {
     MenuItemImage *item = (MenuItemImage *)sender;
     if (item->getTag() == 1) {
-        auto sp = this->getChildByTag(111);
-        while (sp) {
-            sp->removeFromParent();
-            sp = NULL;
-            sp = this->getChildByTag(111);
-        }
-        
-        this->scheduleUpdate();
-        OcUtility::getInstance()->showARControl();
+        showARMonster();
     } else {
-        if (spMonster != NULL) {
-            spMonster->removeFromParent();
-            spMonster = NULL;
-        }
-        if (spBackgroud != NULL) {
-            spBackgroud->removeFromParent();
-            spBackgroud = NULL;
-        }
-        
-        this->unscheduleUpdate();
-        this->showSomeMonster();
+        show3DMonsters();
     }
     
+}
+
+void HelloWorld::show3DMonsters()
+{
+    if (spMonster != NULL) {
+        spMonster->removeFromParent();
+        spMonster = NULL;
+    }
+    if (spBackgroud != NULL) {
+        spBackgroud->removeFromParent();
+        spBackgroud = NULL;
+    }
+    
+    this->unscheduleUpdate();
+    this->showSomeMonster();
+
+}
+
+void HelloWorld::showARMonster()
+{
+    auto sp = this->getChildByTag(111);
+    while (sp) {
+        sp->removeFromParent();
+        sp = NULL;
+        sp = this->getChildByTag(111);
+    }
+    
+    this->scheduleUpdate();
+    OcUtility::getInstance()->showARControl();
+
 }
 

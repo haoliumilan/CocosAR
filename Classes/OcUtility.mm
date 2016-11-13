@@ -20,7 +20,88 @@
 #include <Vuforia/Tool.h>
 #include "SampleApplicationUtils.h"
 
-using namespace cocos2d;
+#import<CoreMotion/CoreMotion.h>
+
+
+USING_NS_CC;
+
+@interface CCDeviceMotionDispatcher : NSObject
+{
+    CMMotionManager *_motionManager;
+    DeviceMotion *_deviceMotion;
+}
+
++ (id) sharedDeviceMotionDispatcher;
+- (id) init;
+- (void) setDeviceMotionEnabled: (bool) isEnabled;
+
+@end
+
+@implementation CCDeviceMotionDispatcher
+
+static CCDeviceMotionDispatcher* s_pDeviceMotionDispatcher;
+
++ (id) sharedDeviceMotionDispatcher
+{
+    if (s_pDeviceMotionDispatcher == nil) {
+        s_pDeviceMotionDispatcher = [[self alloc] init];
+    }
+    
+    return s_pDeviceMotionDispatcher;
+}
+
+- (id) init
+{
+    if( (self = [super init]) ) {
+        _deviceMotion = new DeviceMotion();
+        _motionManager = [[CMMotionManager alloc] init];
+    }
+    return self;
+}
+
+- (void) dealloc
+{
+    s_pDeviceMotionDispatcher = nullptr;
+    delete _deviceMotion;
+    [_motionManager release];
+    [super dealloc];
+}
+
+- (void) setDeviceMotionEnabled: (bool) isEnabled
+{
+    if (isEnabled)
+    {
+        [_motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMDeviceMotion *motion, NSError *error) {
+            [self deviceMotion:motion];
+        }];
+        [_motionManager setDeviceMotionUpdateInterval:0.1];
+    }
+    else
+    {
+        [_motionManager stopDeviceMotionUpdates];
+    }
+}
+
+- (void)deviceMotion:(CMDeviceMotion *)motion
+{
+    CMRotationRate rate = motion.rotationRate;
+    CMAttitude *attitude = motion.attitude;
+    _deviceMotion->rotationX = rate.x;
+    _deviceMotion->rotationY = rate.y;
+    _deviceMotion->rotationZ = rate.z;
+    _deviceMotion->pintch = attitude.pitch;
+    _deviceMotion->yaw = attitude.yaw;
+    _deviceMotion->roll = attitude.roll;
+    
+    EventCustom event("DeviceMotion");
+    event.setUserData(_deviceMotion);
+    auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
+    dispatcher->dispatchEvent(&event);
+
+}
+
+@end
+
 
 OcUtility* OcUtility::s_pcIf = NULL;
 
@@ -164,6 +245,11 @@ void OcUtility::getRotatQuatFrom3D(cocos2d::Quaternion *rotatQuat, cocos2d::Vec3
     rotatQuat->z = coshalfRadx * coshalfRady * sinhalfRadz - sinhalfRadx * sinhalfRady * coshalfRadz;
     rotatQuat->w = coshalfRadx * coshalfRady * coshalfRadz + sinhalfRadx * sinhalfRady * sinhalfRadz;
 
+}
+
+void OcUtility::setDeviceMotionEnabled(bool isEnabled)
+{
+    [[CCDeviceMotionDispatcher sharedDeviceMotionDispatcher] setDeviceMotionEnabled:isEnabled];
 }
 
 

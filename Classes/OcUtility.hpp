@@ -11,6 +11,27 @@
 
 #include "cocos2d.h"
 
+class CC_DLL DeviceMotion
+: public cocos2d::Ref
+{
+public:
+    double rotationX;
+    double rotationY;
+    double rotationZ;
+    double pintch;
+    double yaw;
+    double roll;
+    
+    DeviceMotion() {
+        rotationX = 0.0;
+        rotationY = 0.0;
+        rotationZ = 0.0;
+        pintch = 0.0;
+        yaw = 0.0;
+        roll = 0.0;
+    }
+};
+
 class OcUtility
 {
     static OcUtility* s_pcIf;
@@ -37,6 +58,9 @@ public:
     void getRotatQuatFrom3D(cocos2d::Quaternion *rotatQuat, cocos2d::Vec3 *rotat3D);
     
     cocos2d::Mat4 getProjectionMatrix();
+    
+    
+    static void setDeviceMotionEnabled(bool isEnabled);
 };
 
 #endif /* OcUtility_hpp */

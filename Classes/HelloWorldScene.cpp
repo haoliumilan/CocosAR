@@ -39,7 +39,7 @@ bool HelloWorld::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-//    auto bg = Sprite::create("Icon-100.png");
+//    auto bg = Sprite::create("HelloWorld.png");
 //    this->addChild(bg);
 //    bg->setPosition(visibleSize.width*0.5, visibleSize.height*0.5);
     
@@ -72,18 +72,21 @@ bool HelloWorld::init()
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, closeItem2, NULL);
     menu->setPosition(Vec2(0, 0));
-    this->addChild(menu, 1);
+//    this->addChild(menu, 1);
     
     spBackgroud = NULL;
     spMonster = NULL;
     
-//    auto dNode = DrawNode::create();
-//    this->addChild(dNode);
-//    dNode->drawLine(Vec2(0, 0), Vec2(568, 320), Color4F(1, 0, 0, 1));
-    
-    showCameraMonster();
+    perCamera = NULL;
     
     return true;
+}
+
+void HelloWorld::drawLine(cocos2d::Vec2 pos)
+{
+    auto dNode = DrawNode::create();
+    this->addChild(dNode);
+    dNode->drawLine(Vec2(0, 0), pos, Color4F(1, 0, 0, 1));
 }
 
 void HelloWorld::showCameraMonster()
@@ -101,13 +104,6 @@ void HelloWorld::showCameraMonster()
     up(0.0f, 1.0f, 0.0f);
     perCamera->setPosition3D(eye);
     perCamera->lookAt(center, up);
-    perCamera->setDepth(1);
-    
-    auto perCamera2 = Camera::createPerspective(60, (GLfloat)visibleSize.width / visibleSize.height, 10, zeye + visibleSize.height / 2.0f);
-    this->addChild(perCamera2);
-    perCamera2->setCameraFlag(CameraFlag::USER2);
-    perCamera2->setPosition3D(eye);
-    perCamera2->lookAt(center, up);
     
     auto radius = zeye;
     auto newX = visibleSize.width/2;
@@ -117,28 +113,102 @@ void HelloWorld::showCameraMonster()
     
     for (int i = 0; i < 8; i++) {
         newAngle = i*M_PI/4;
-//        newZ = radius - radius * cosf(newAngle);
-//        newX = visibleSize.width/2 - radius * sinf(newAngle);
-        newZ = radius;
+        newZ = radius-100;
         newX = visibleSize.width/2 - radius*sinf(newAngle);
         newY = visibleSize.height/2 + radius*cosf(newAngle);
         showOneMonster(newX, newY, newZ, newAngle);
     }
 
+//    for (int i = 0; i < 8; i++) {
+//        newAngle = i*M_PI/4+M_PI/8;
+//        newZ = radius-100;
+//        newX = visibleSize.width/2 - radius*sinf(newAngle)/2;
+//        newY = visibleSize.height/2 + radius*cosf(newAngle)/2;
+//        showOneMonster(newX, newY, newZ, newAngle);
+//    }
+
+    auto listener1 = EventListenerTouchOneByOne::create();
+    listener1->setSwallowTouches(true);
+    
+    listener1->onTouchBegan = [](Touch* touch, Event* event){
+        auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
+        auto monCount = layer->arrMonster.size();
+        for (int i = 0; i < monCount; i++) {
+            auto target = layer->arrMonster[i];
+            Rect rect = target->getBoundingBox();
+            auto isInRect = isScreenPointInRect(touch->getLocation(), Camera::getDefaultCamera(),
+                                                layer->getWorldToNodeTransform(), rect, nullptr);
+            if (isInRect)
+            {
+                log("sprite3d %d began... x = %f, y = %f", i, touch->getLocation().x, touch->getLocation().y);
+                target->setOpacity(100);
+                return true;
+            }
+        }
+        
+        return false;
+    };
+    
+    //    listener1->onTouchMoved = [](Touch* touch, Event* event){
+    //        auto target = static_cast<Sprite3D*>(event->getCurrentTarget());
+    //        target->setPosition(target->getPosition() + touch->getDelta());
+    //    };
+    
+    listener1->onTouchEnded = [=](Touch* touch, Event* event){
+        auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
+        auto monCount = layer->arrMonster.size();
+        for (int i = 0; i < monCount; i++) {
+            auto target = layer->arrMonster[i];
+            target->setOpacity(255);
+        }
+        log("sprite3d onTouchesEnded.. ");
+    };
+    
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);
+
 }
 
-void HelloWorld::showOneMonster(float posX, float posY, float posZ, float rotate)
+void HelloWorld::updateCameraMonster()
+{
+    auto monCount = arrMonster.size();
+    for (int i = 0; i < monCount; i++) {
+        auto spMon = arrMonster[i];
+        
+        auto modelMat = arrTransform[i];
+        auto viewProjection = perCamera->getViewProjectionMatrix();
+        auto cameraMat = Camera::getDefaultCamera()->getViewProjectionMatrix();
+        modelMat = cameraMat.getInversed() * viewProjection * modelMat;
+        spMon->setNodeToParentTransform(modelMat);
+    }
+}
+
+Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float rotate)
 {
     auto spMon = Sprite3D::create("res/model_1.c3t");
-    this->addChild(spMon);
+    this->addChild(spMon, 1);
     spMon->setGlobalZOrder(1);
     spMon->setScaleX(10);
     spMon->setScaleY(10);
     spMon->setScaleZ(10);
     spMon->setPosition3D(Vec3(posX, posY, posZ));
     spMon->setRotation3D(Vec3(90, 0, -CC_RADIANS_TO_DEGREES(rotate)));
-    spMon->setCameraMask(2);
+    arrMonster.push_back(spMon);
+    auto transform = spMon->getNodeToParentTransform();
+    arrTransform.push_back(transform);
 
+//    auto aniName = "res/motion_1.c3t";
+//    if (rand_0_1() > 0.5) {
+//        aniName = "res/motion_2.c3t";
+//    }
+//    auto anim = Animation3D::create(aniName, "Take 001");
+//    if (anim) {
+//        auto animate = Animate3D::create(anim);
+//        animate->setQuality(Animate3DQuality::QUALITY_HIGH);
+//        auto repeate = RepeatForever::create(animate);
+//        spMon->runAction(repeate);
+//    }
+    
+    return spMon;
 }
 
 void HelloWorld::onEnter()
@@ -153,18 +223,19 @@ void HelloWorld::onEnter()
                                              CC_RADIANS_TO_DEGREES(motion->pintch),
                                              CC_RADIANS_TO_DEGREES(motion->yaw),
                                              CC_RADIANS_TO_DEGREES(motion->roll)));
-//        perCamera->setRotation3D(Vec3(90-CC_RADIANS_TO_DEGREES(motion->attitudeZ),
-//                                      -CC_RADIANS_TO_DEGREES(motion->attitudeY),
-//                                      180-CC_RADIANS_TO_DEGREES(motion->attitudeX)));
-        perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
-                                      CC_RADIANS_TO_DEGREES(motion->pintch),
-                                      -CC_RADIANS_TO_DEGREES(motion->yaw)));
+        if (perCamera) {
+            perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
+                                          CC_RADIANS_TO_DEGREES(motion->pintch),
+                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
+        }
         
-
     });
     
     auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
     dispatcher->addEventListenerWithFixedPriority(listener, 1);
+    
+    showARMonster();
+    showCameraMonster();
 
 }
 
@@ -184,7 +255,6 @@ void HelloWorld::update(float delta)
             spBackgroud->setPosition(visibleSize.width/2, visibleSize.height/2);
             this->addChild(spBackgroud);
             spBackgroud->setScale(2.0);
-            spBackgroud->setCameraMask(4);
         } else {
             spBackgroud->setTexture(tex);
         }
@@ -193,6 +263,7 @@ void HelloWorld::update(float delta)
     if (OcUtility::getInstance()->getIsTarget() == true) {
         Mat4 mat = OcUtility::getInstance()->getTargetMat();
         cocos2d::Mat4 cameraMat = cocos2d::Camera::getDefaultCamera()->getProjectionMatrix();
+//        cameraMat = cocos2d::Camera::getDefaultCamera()->getViewProjectionMatrix();
         mat = cameraMat.getInversed() * mat;
         
         Vec3 scale;
@@ -206,13 +277,16 @@ void HelloWorld::update(float delta)
             spMonster = Sprite3D::create("res/model_1.c3t");
             this->addChild(spMonster);
             spMonster->setGlobalZOrder(1);
-//            spMonster->setCameraMask(2);
         }
         
         spMonster->setScaleX(scale.x*10);
         spMonster->setScaleY(scale.y*10*853/640);
+//        spMonster->setScaleY(scale.y*10);
         spMonster->setScaleZ(scale.z*10);
-        spMonster->setPosition3D(Vec3(visibleSize.width/2+trans.x*2, visibleSize.height/2+trans.y*2, visibleSize.height/2+trans.z));
+        spMonster->setPosition3D(Vec3(visibleSize.width/2+trans.x*2,
+                                      visibleSize.height/2+trans.y*2,
+                                      visibleSize.height/2+trans.z));
+//        spMonster->setPosition3D(trans);
         spMonster->setRotation3D(Vec3(angle.x, angle.y, angle.z));
         
     } else {
@@ -221,7 +295,8 @@ void HelloWorld::update(float delta)
             spMonster = NULL;
         }
     }
-
+    
+    updateCameraMonster();
 }
 
 void HelloWorld::showSomeMonster() {

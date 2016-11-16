@@ -9,6 +9,9 @@ class HelloWorld : public cocos2d::Layer
     cocos2d::Sprite3D *spMonster;
     cocos2d::Label *lbLog;
     cocos2d::Camera *perCamera;
+    std::vector<cocos2d::Sprite3D*> arrMonster;
+    std::vector<cocos2d::Mat4> arrTransform;
+    
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
@@ -30,9 +33,11 @@ public:
     void update(float delta) override;
     
     void showSomeMonster();
-    void showOneMonster(float posX, float posY, float posZ, float rotateY);
+    cocos2d::Sprite3D* showOneMonster(float posX, float posY, float posZ, float rotateY);
     void showCameraMonster();
+    void updateCameraMonster();
     
+    void drawLine(cocos2d::Vec2 pos);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

@@ -48,7 +48,7 @@ public:
     
     cocos2d::Texture2D *getARTexture2D();
     
-    void printMatrix(const float* mat);
+    static void printMatrix(const float* mat);
 
     cocos2d::Mat4 getTargetMat();
     bool getIsTarget();

@@ -155,36 +155,36 @@ void HelloWorld::showCameraMonster()
         return false;
     };
     
-    listener1->onTouchMoved = [](Touch* touch, Event* event){
-        auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
-        auto target = layer->selectedMon;
-        auto direction = touch->getDelta();
-        auto monRotation = CC_DEGREES_TO_RADIANS(target->getRotation());
-        
-        direction.rotate(Vec2::ZERO, monRotation);
-        auto direction3D = Vec3(direction.x, direction.y, 0);
-        
-        auto index = target->getTag();
-        auto transform = layer->arrTransform[index];
-        if (std::abs(direction.x) > std::abs(direction.y))
-        {
-            transform.rotateY(direction.x/250);
-            layer->arrTransform.erase(layer->arrTransform.begin()+index);
-            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
-            
-        } else {
-            auto newScale = target->getScale();
-            if (direction.y >= 0 and target->getScale() < 15)
-            {
-                newScale = 1.02;
-            } else if (direction.y < 0 and target->getScale() >3) {
-                newScale = 0.98;
-            }
-            transform.scale(newScale);
-            layer->arrTransform.erase(layer->arrTransform.begin()+index);
-            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
-        }
-    };
+//    listener1->onTouchMoved = [](Touch* touch, Event* event){
+//        auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
+//        auto target = layer->selectedMon;
+//        auto direction = touch->getDelta();
+//        auto monRotation = CC_DEGREES_TO_RADIANS(target->getRotation());
+//        
+//        direction.rotate(Vec2::ZERO, monRotation);
+//        auto direction3D = Vec3(direction.x, direction.y, 0);
+//        
+//        auto index = target->getTag();
+//        auto transform = layer->arrTransform[index];
+//        if (std::abs(direction.x) > std::abs(direction.y))
+//        {
+//            transform.rotateY(direction.x/250);
+//            layer->arrTransform.erase(layer->arrTransform.begin()+index);
+//            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
+//            
+//        } else {
+//            auto newScale = target->getScale();
+//            if (direction.y >= 0 and target->getScale() < 15)
+//            {
+//                newScale = 1.02;
+//            } else if (direction.y < 0 and target->getScale() >3) {
+//                newScale = 0.98;
+//            }
+//            transform.scale(newScale);
+//            layer->arrTransform.erase(layer->arrTransform.begin()+index);
+//            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
+//        }
+//    };
     
     listener1->onTouchEnded = [=](Touch* touch, Event* event){
         auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());

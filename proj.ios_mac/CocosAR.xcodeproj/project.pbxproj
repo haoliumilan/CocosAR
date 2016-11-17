@@ -540,6 +540,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0720;
+				TargetAttributes = {
+					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = QTA7AM9T5Z;
+						ProvisioningStyle = Manual;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CocosAR" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -690,6 +696,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
+				DEVELOPMENT_TEAM = QTA7AM9T5Z;
 				ENABLE_BITCODE = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -718,8 +725,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.dragonwolf.jp;
 				PRODUCT_NAME = "CocosAR-mobile";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "6a2b70a0-84d6-4ed0-8d4f-bb31c49b66b8";
+				PROVISIONING_PROFILE_SPECIFIER = general_dev;
 				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";
 				VALID_ARCHS = "arm64 armv7";
@@ -732,6 +741,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
+				DEVELOPMENT_TEAM = QTA7AM9T5Z;
 				ENABLE_BITCODE = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -758,8 +768,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.dragonwolf.jp;
 				PRODUCT_NAME = "CocosAR-mobile";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "6a2b70a0-84d6-4ed0-8d4f-bb31c49b66b8";
+				PROVISIONING_PROFILE_SPECIFIER = general_dev;
 				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";
 				VALID_ARCHS = "arm64 armv7";

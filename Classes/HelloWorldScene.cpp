@@ -5,7 +5,11 @@
 
 USING_NS_CC;
 
+using namespace std;
 using namespace cocostudio::timeline;
+
+static string arrTalk[] = {"大腿求带", "一起玩的加", "出售数码蛋", "哥哥带带我吧", "公会收人", "求个活跃公会", "长期玩的加好友", "找个师傅教我玩",
+    "组队任务来熟练工", "限时降临本找队友"};
 
 Scene* HelloWorld::createScene()
 {
@@ -32,6 +36,12 @@ bool HelloWorld::init()
         return false;
     }
     
+    spBackgroud = NULL;
+    spMonster = NULL;
+    perCamera = NULL;
+    selectedMon = NULL;
+    lbLog = NULL;
+
 //    auto rootNode = CSLoader::createNode("MainScene.csb");
 //
 //    addChild(rootNode);
@@ -43,11 +53,11 @@ bool HelloWorld::init()
 //    this->addChild(bg);
 //    bg->setPosition(visibleSize.width*0.5, visibleSize.height*0.5);
     
-    lbLog = Label::createWithTTF("Hello World", "fonts/arial.ttf", 32);
-    lbLog->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - lbLog->getContentSize().height));
-    lbLog->setColor(Color3B::WHITE);
-    this->addChild(lbLog, 1);
+//    lbLog = Label::createWithTTF("Hello World", "fonts/arial.ttf", 32);
+//    lbLog->setPosition(Vec2(origin.x + visibleSize.width/2,
+//                            origin.y + visibleSize.height - lbLog->getContentSize().height));
+//    lbLog->setColor(Color3B::WHITE);
+//    this->addChild(lbLog, 1);
 
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
@@ -73,11 +83,6 @@ bool HelloWorld::init()
     auto menu = Menu::create(closeItem, closeItem2, NULL);
     menu->setPosition(Vec2(0, 0));
 //    this->addChild(menu, 1);
-    
-    spBackgroud = NULL;
-    spMonster = NULL;
-    
-    perCamera = NULL;
     
     return true;
 }
@@ -116,7 +121,7 @@ void HelloWorld::showCameraMonster()
         newZ = radius-100;
         newX = visibleSize.width/2 - radius*sinf(newAngle);
         newY = visibleSize.height/2 + radius*cosf(newAngle);
-        showOneMonster(newX, newY, newZ, newAngle);
+        showOneMonster(newX, newY, newZ, newAngle, i);
     }
 
 //    for (int i = 0; i < 8; i++) {
@@ -124,7 +129,7 @@ void HelloWorld::showCameraMonster()
 //        newZ = radius-100;
 //        newX = visibleSize.width/2 - radius*sinf(newAngle)/2;
 //        newY = visibleSize.height/2 + radius*cosf(newAngle)/2;
-//        showOneMonster(newX, newY, newZ, newAngle);
+//        showOneMonster(newX, newY, newZ, newAngle, i+8);
 //    }
 
     auto listener1 = EventListenerTouchOneByOne::create();
@@ -141,7 +146,8 @@ void HelloWorld::showCameraMonster()
             if (isInRect)
             {
                 log("sprite3d %d began... x = %f, y = %f", i, touch->getLocation().x, touch->getLocation().y);
-                target->setOpacity(100);
+                layer->selectedMon = target;
+                target->getChildByTag(2)->setVisible(true);
                 return true;
             }
         }
@@ -149,17 +155,43 @@ void HelloWorld::showCameraMonster()
         return false;
     };
     
-    //    listener1->onTouchMoved = [](Touch* touch, Event* event){
-    //        auto target = static_cast<Sprite3D*>(event->getCurrentTarget());
-    //        target->setPosition(target->getPosition() + touch->getDelta());
-    //    };
+    listener1->onTouchMoved = [](Touch* touch, Event* event){
+        auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
+        auto target = layer->selectedMon;
+        auto direction = touch->getDelta();
+        auto monRotation = CC_DEGREES_TO_RADIANS(target->getRotation());
+        
+        direction.rotate(Vec2::ZERO, monRotation);
+        auto direction3D = Vec3(direction.x, direction.y, 0);
+        
+        auto index = target->getTag();
+        auto transform = layer->arrTransform[index];
+        if (std::abs(direction.x) > std::abs(direction.y))
+        {
+            transform.rotateY(direction.x/250);
+            layer->arrTransform.erase(layer->arrTransform.begin()+index);
+            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
+            
+        } else {
+            auto newScale = target->getScale();
+            if (direction.y >= 0 and target->getScale() < 15)
+            {
+                newScale = 1.02;
+            } else if (direction.y < 0 and target->getScale() >3) {
+                newScale = 0.98;
+            }
+            transform.scale(newScale);
+            layer->arrTransform.erase(layer->arrTransform.begin()+index);
+            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
+        }
+    };
     
     listener1->onTouchEnded = [=](Touch* touch, Event* event){
         auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
-        auto monCount = layer->arrMonster.size();
-        for (int i = 0; i < monCount; i++) {
-            auto target = layer->arrMonster[i];
-            target->setOpacity(255);
+        if (layer->selectedMon)
+        {
+            layer->selectedMon->getChildByTag(2)->setVisible(false);
+            layer->selectedMon = NULL;
         }
         log("sprite3d onTouchesEnded.. ");
     };
@@ -170,6 +202,8 @@ void HelloWorld::showCameraMonster()
 
 void HelloWorld::updateCameraMonster()
 {
+//    Size visibleSize = Director::getInstance()->getVisibleSize();
+//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
     auto monCount = arrMonster.size();
     for (int i = 0; i < monCount; i++) {
         auto spMon = arrMonster[i];
@@ -182,10 +216,10 @@ void HelloWorld::updateCameraMonster()
     }
 }
 
-Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float rotate)
+Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float rotate, int iTag)
 {
     auto spMon = Sprite3D::create("res/model_1.c3t");
-    this->addChild(spMon, 1);
+    this->addChild(spMon, 1, iTag);
     spMon->setGlobalZOrder(1);
     spMon->setScaleX(10);
     spMon->setScaleY(10);
@@ -208,6 +242,28 @@ Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float r
 //        spMon->runAction(repeate);
 //    }
     
+    auto fileName = StringUtils::format("icon/head_%d.png", iTag+1);
+    auto pBillBoard = Sprite::create(fileName);
+    spMon->addChild(pBillBoard, 1, 1);
+    pBillBoard->setPosition(0, 30);
+    pBillBoard->setGlobalZOrder(1);
+    pBillBoard->setScale(0.1);
+    
+    auto talkBg = Sprite::create("talk_bg.png");
+    spMon->addChild(talkBg, 1, 2);
+    talkBg->setPosition(15, 22);
+    talkBg->setScale(0.1);
+    talkBg->setGlobalZOrder(2);
+    talkBg->setVisible(false);
+    
+    auto pTalk = Label::createWithTTF(arrTalk[iTag].c_str(), "fonts/Marker Felt.ttf", 60);
+    pTalk->setSystemFontName("Hiragino Sans GB");
+    pTalk->setColor(Color3B::BLACK);
+    pTalk->setPosition(100, 100);
+    pTalk->setScale(2);
+    talkBg->addChild(pTalk);
+    pTalk->setGlobalZOrder(2);
+    
     return spMon;
 }
 
@@ -219,10 +275,12 @@ void HelloWorld::onEnter()
     
     auto listener = EventListenerCustom::create("DeviceMotion", [=](EventCustom* event){
         DeviceMotion *motion = static_cast<DeviceMotion*>(event->getUserData());
-        lbLog->setString(StringUtils::format("motion:pintch = %0.f, yaw = %0.f, roll = %0.f",
-                                             CC_RADIANS_TO_DEGREES(motion->pintch),
-                                             CC_RADIANS_TO_DEGREES(motion->yaw),
-                                             CC_RADIANS_TO_DEGREES(motion->roll)));
+        if (lbLog) {
+            lbLog->setString(StringUtils::format("motion:pintch = %0.f, yaw = %0.f, roll = %0.f",
+                                                 CC_RADIANS_TO_DEGREES(motion->pintch),
+                                                 CC_RADIANS_TO_DEGREES(motion->yaw),
+                                                 CC_RADIANS_TO_DEGREES(motion->roll)));
+        }
         if (perCamera) {
             perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
                                           CC_RADIANS_TO_DEGREES(motion->pintch),
@@ -236,6 +294,7 @@ void HelloWorld::onEnter()
     
     showARMonster();
     showCameraMonster();
+    this->scheduleUpdate();
 
 }
 
@@ -356,7 +415,6 @@ void HelloWorld::showARMonster()
         sp = this->getChildByTag(111);
     }
     
-    this->scheduleUpdate();
     OcUtility::getInstance()->showARControl();
 
 }

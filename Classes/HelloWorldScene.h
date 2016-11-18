@@ -12,7 +12,8 @@ class HelloWorld : public cocos2d::Layer
     std::vector<cocos2d::Sprite3D*> arrMonster;
     std::vector<cocos2d::Mat4> arrTransform;
     cocos2d::Sprite3D *selectedMon;
-    std::vector<cocos2d::Sprite3D*> arrHead;
+    std::vector<float> arrRotationZ;
+    std::vector<cocos2d::Sprite*> arrHead;
     
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer

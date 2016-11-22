@@ -12,9 +12,12 @@ class HelloWorld : public cocos2d::Layer
     std::vector<cocos2d::Sprite3D*> arrMonster;
     std::vector<cocos2d::Mat4> arrTransform;
     cocos2d::Sprite3D *selectedMon;
-    std::vector<float> arrRotationZ;
+    std::vector<float> arrRotationY;
+    std::vector<float> arrRotationX;
     std::vector<cocos2d::Sprite*> arrHead;
-    
+    float monScale;
+    cocos2d::Node *scaleNode;
+    bool isCameraBack;
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
@@ -41,7 +44,10 @@ public:
     void updateCameraMonster();
     
     void drawLine(cocos2d::Vec2 pos);
+    void drawRect(cocos2d::Rect rect);
     void testCameraMonster();
+    
+    void touchEnd();
 };
 
 #endif // __HELLOWORLD_SCENE_H__

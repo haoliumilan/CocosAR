@@ -127,7 +127,12 @@ void OcUtility::showARControl()
     
     AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
     [appCtrl.viewController showARControl];
-    
+}
+
+bool OcUtility::switchCamera()
+{
+    AppController *appCtrl = (AppController *)[UIApplication sharedApplication].delegate;
+    return [appCtrl.viewController switchCamera];
 }
 
 void OcUtility::showOne()
@@ -153,13 +158,14 @@ cocos2d::Texture2D *OcUtility::getARTexture2D()
     for (int i = 0; i < num; i++)
     {
         oneImage = frame.getImage(i);
-        if (i == 0) {
+        if (oneImage->getFormat() == 1) {
             texture2d->initWithData(oneImage->getPixels(),
-                                    oneImage->getBufferWidth() * oneImage->getBufferHeight() * 2,
-                                    Texture2D::PixelFormat::RGB565,
-                                    oneImage->getBufferWidth(),
-                                    oneImage->getBufferHeight(),
-                                    cocos2d::Size(oneImage->getBufferWidth(), oneImage->getBufferHeight()));
+                            oneImage->getBufferWidth() * oneImage->getBufferHeight() * 2,
+                            Texture2D::PixelFormat::RGB565,
+                            oneImage->getBufferWidth(),
+                            oneImage->getBufferHeight(),
+                            cocos2d::Size(oneImage->getBufferWidth(), oneImage->getBufferHeight()));
+            break;
         }
     }
     

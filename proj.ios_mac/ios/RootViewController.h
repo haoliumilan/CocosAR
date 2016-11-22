@@ -38,6 +38,8 @@
 
 - (void)showARControl;
 
+- (BOOL)switchCamera;
+
 - (void)showOne;
 
 @end

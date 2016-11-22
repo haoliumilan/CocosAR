@@ -19,8 +19,12 @@ countries.
 
 @property (nonatomic, strong) SampleApplicationSession * vapp;
 
+@property (nonatomic) BOOL isBackCamera;
+
 - (id)initWithParentViewController:(UIViewController *)viewCtrl;
 
 - (void)getARResult;
+
+- (BOOL)switchCamera;
 
 @end

@@ -41,7 +41,10 @@ bool HelloWorld::init()
     perCamera = NULL;
     selectedMon = NULL;
     lbLog = NULL;
-
+    monScale = 1.0;
+    isCameraBack = true;
+    
+    
 //    auto rootNode = CSLoader::createNode("MainScene.csb");
 //
 //    addChild(rootNode);
@@ -79,10 +82,15 @@ bool HelloWorld::init()
     closeItem2->setScale(2.0);
     closeItem2->setTag(2);
     
+    auto cameraItem = MenuItemFont::create("CAMERA", CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
+    cameraItem->setTag(3);
+    cameraItem->setPosition(Vec2(origin.x + visibleSize.width - 80,
+                                 origin.y + visibleSize.height - 50));
+    
     // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, closeItem2, NULL);
+    auto menu = Menu::create(cameraItem, NULL);
     menu->setPosition(Vec2(0, 0));
-//    this->addChild(menu, 1);
+    this->addChild(menu, 1);
     
     return true;
 }
@@ -92,6 +100,13 @@ void HelloWorld::drawLine(cocos2d::Vec2 pos)
     auto dNode = DrawNode::create();
     this->addChild(dNode);
     dNode->drawLine(Vec2(0, 0), pos, Color4F(1, 0, 0, 1));
+}
+
+void HelloWorld::drawRect(cocos2d::Rect rect)
+{
+    auto dNode = DrawNode::create();
+    this->addChild(dNode, 0, 9999);
+    dNode->drawRect(rect.origin, rect.size, Color4F(1, 0, 0, 1));
 }
 
 void HelloWorld::showCameraMonster()
@@ -116,11 +131,14 @@ void HelloWorld::showCameraMonster()
     auto newZ = 0;
     auto newAngle = M_PI/4;
     
+    scaleNode = Node::create();
+    this->addChild(scaleNode, 1);
+    
     for (int i = 0; i < 8; i++) {
         newAngle = i*M_PI/4;
-        newZ = radius-100;
-        newX = visibleSize.width/2 - radius*sinf(newAngle);
-        newY = visibleSize.height/2 + radius*cosf(newAngle);
+        newZ = zeye-200;
+        newX = visibleSize.width/2-radius*sinf(newAngle);
+        newY = visibleSize.height/2+radius*cosf(newAngle);
         showOneMonster(newX, newY, newZ, newAngle, i);
     }
 
@@ -132,93 +150,124 @@ void HelloWorld::showCameraMonster()
 //        showOneMonster(newX, newY, newZ, newAngle, i+8);
 //    }
 
-    auto listener1 = EventListenerTouchOneByOne::create();
-    listener1->setSwallowTouches(true);
-    
-    listener1->onTouchBegan = [](Touch* touch, Event* event){
+    auto listener1 = EventListenerTouchAllAtOnce::create();
+    listener1->onTouchesBegan = [](const std::vector<Touch*>& touches, Event  *event){
+        auto touch = touches[0];
         auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
-        auto monCount = layer->arrMonster.size();
-        for (int i = 0; i < monCount; i++) {
-            auto target = layer->arrMonster[i];
-            Rect rect = target->getBoundingBox();
-            auto isInRect = isScreenPointInRect(touch->getLocation(), Camera::getDefaultCamera(),
-                                                layer->getWorldToNodeTransform(), rect, nullptr);
-            if (isInRect)
-            {
-                log("sprite3d %d began... x = %f, y = %f", i, touch->getLocation().x, touch->getLocation().y);
-                layer->selectedMon = target;
-                auto talk = layer->arrHead[i]->getChildByTag(2);
-                if (talk) {
-                    talk->setVisible(true);
+        if (touches.size() == 1 and touches[0]->getID() == 0) {
+            auto monCount = layer->arrMonster.size();
+            for (int i = 0; i < monCount; i++) {
+                auto target = layer->arrMonster[i];
+                Rect rect = target->getBoundingBox();
+                auto isInRect = isScreenPointInRect(touch->getLocation(),
+                                                    Camera::getDefaultCamera(),
+                                                    layer->getWorldToNodeTransform(),
+                                                    rect,
+                                                    nullptr);
+                //            auto isInRect = rect.containsPoint(touch->getLocation());
+                if (isInRect)
+                {
+//                    layer->drawRect(rect);
+                    log("sprite3d %d, %f, %f", i, -target->getRotation3D().z, layer->perCamera->getRotation3D().y);
+                    log("rect = %f, %f, %f, %f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+                    layer->selectedMon = target;
+                    auto talk = layer->arrHead[i]->getChildByTag(2);
+                    if (talk) {
+                        log("talk talk, talk!!!");
+                        talk->setVisible(true);
+                    }
+                    return;
                 }
-                return true;
             }
+        } else {
+            layer->touchEnd();
         }
-        
-        return false;
     };
     
-    listener1->onTouchMoved = [](Touch* touch, Event* event){
+    listener1->onTouchesMoved = [](const std::vector<Touch*>& touches, Event  *event){
         auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
         auto target = layer->selectedMon;
-        auto direction = touch->getDelta();
-        
-        auto mat = target->getWorldToNodeTransform();
-        Vec3 scale;
-        Quaternion quat;
-        Vec3 trans;
-        mat.decompose(&scale, &quat, &trans);
-        Vec3 angle;
-        OcUtility::getInstance()->getRotat3DFromQuat(&angle, &quat);
-
-        auto monRotation = CC_DEGREES_TO_RADIANS(angle.z);
-        log("monRotation = %f, %f, %f", angle.x, angle.y, angle.z);
-        direction.rotate(Vec2::ZERO, -monRotation);
-        auto direction3D = Vec3(direction.x, direction.y, 0);
-        
-        auto index = target->getTag();
-        auto transform = layer->arrTransform[index];
-        if (std::abs(direction.x) > std::abs(direction.y))
-        {
-            auto roatationZ = layer->arrRotationZ[index];
-            roatationZ += direction.x/250;
-            layer->arrRotationZ.erase(layer->arrRotationZ.begin()+index);
-            layer->arrRotationZ.insert(layer->arrRotationZ.begin()+index, roatationZ);
-//            transform.rotateY();
-//            layer->arrTransform.erase(layer->arrTransform.begin()+index);
-//            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
+        if (touches.size() == 1 and touches[0]->getID() == 0 and target) {
+            auto touch = touches[0];
+            auto direction = touch->getDelta();
             
-        } else {
-            auto newScale = target->getScale();
-            if (direction.y >= 0 and target->getScale() < 15)
+            auto mat = target->getWorldToNodeTransform();
+            Vec3 scale;
+            Quaternion quat;
+            Vec3 trans;
+            mat.decompose(&scale, &quat, &trans);
+            Vec3 angle;
+            OcUtility::getInstance()->getRotat3DFromQuat(&angle, &quat);
+            
+            auto monRotation = CC_DEGREES_TO_RADIANS(angle.z);
+            direction.rotate(Vec2::ZERO, -monRotation);
+            auto direction3D = Vec3(direction.x, direction.y, 0);
+            
+            auto index = target->getTag();
+            if (std::abs(direction.x) > std::abs(direction.y))
             {
-                newScale = 1.02;
-            } else if (direction.y < 0 and target->getScale() >3) {
-                newScale = 0.98;
+                auto roatationY = layer->arrRotationY[index];
+                roatationY += direction.x/250;
+                layer->arrRotationY.erase(layer->arrRotationY.begin()+index);
+                layer->arrRotationY.insert(layer->arrRotationY.begin()+index, roatationY);
+                
+            } else {
+                auto roatationX = layer->arrRotationX[index];
+                roatationX -= direction.y/250;
+                layer->arrRotationX.erase(layer->arrRotationX.begin()+index);
+                layer->arrRotationX.insert(layer->arrRotationX.begin()+index, roatationX);
+                
             }
-            transform.scale(newScale);
-            layer->arrTransform.erase(layer->arrTransform.begin()+index);
-            layer->arrTransform.insert(layer->arrTransform.begin()+index, transform);
-            
+        
+        } else if (touches.size() == 2) {
+            auto curLength = touches[0]->getLocation().getDistance(touches[1]->getLocation());
+            auto preLength = touches[0]->getPreviousLocation().getDistance(touches[1]->getPreviousLocation());
+            if (curLength > preLength)
+            {
+                layer->monScale += 0.02;
+                layer->monScale = MIN(layer->monScale, 1.75);
+            } else if (curLength < preLength) {
+                layer->monScale -= 0.02;
+                layer->monScale = MAX(layer->monScale, 0.75);
+            }
+//            layer->setScale(layer->monScale);
         }
     };
     
-    listener1->onTouchEnded = [=](Touch* touch, Event* event){
-        auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
-        if (layer->selectedMon)
+    listener1->onTouchesEnded = [=](const std::vector<Touch*>& touches, Event  *event){
+        for( auto &touch: touches)
         {
-            auto iTag = layer->selectedMon->getTag();
-            auto talk = layer->arrHead[iTag]->getChildByTag(2);
-            if (talk) {
-                talk->setVisible(false);
+            if (touch->getID() == 0)
+            {
+                auto layer = static_cast<HelloWorld*>(event->getCurrentTarget());
+//                auto dNode = layer->getChildByTag(9999);
+//                while(dNode)
+//                {
+//                    dNode->removeFromParent();
+//                    dNode = layer->getChildByTag(9999);
+//                }
+                layer->touchEnd();
             }
-            layer->selectedMon = NULL;
         }
+
         log("sprite3d onTouchesEnded.. ");
     };
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);
 
+}
+
+void HelloWorld::touchEnd()
+{
+    if (selectedMon)
+    {
+        auto iTag = selectedMon->getTag();
+        auto talk = arrHead[iTag]->getChildByTag(2);
+        if (talk) {
+            talk->setVisible(false);
+        }
+        selectedMon = NULL;
+    }
 }
 
 void HelloWorld::updateCameraMonster()
@@ -234,23 +283,24 @@ void HelloWorld::updateCameraMonster()
         auto cameraMat = Camera::getDefaultCamera()->getViewProjectionMatrix();
 
         auto modelMat = arrTransform[i];
-        modelMat.rotateY(arrRotationZ[i]);
+        modelMat.rotateY(arrRotationY[i]);
+        modelMat.rotateX(arrRotationX[i]);
+        modelMat.scale(monScale);
         auto newMat = cameraMat.getInversed() * viewProjection * modelMat;
         spMon->setNodeToParentTransform(newMat);
 
         modelMat = arrTransform[i];
-        modelMat.scale(0.1);
+        modelMat.scale(0.1*monScale);
         modelMat.translate(-100, 200, 0);
         newMat = cameraMat.getInversed() * viewProjection * modelMat;
         spHead->setNodeToParentTransform(newMat);
-        
     }
 }
 
 Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float rotate, int iTag)
 {
     auto spMon = Sprite3D::create("res/model_1.c3t");
-    this->addChild(spMon, 1, iTag);
+    scaleNode->addChild(spMon, 1, iTag);
     spMon->setGlobalZOrder(1);
     spMon->setScaleX(10);
     spMon->setScaleY(10);
@@ -260,7 +310,8 @@ Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float r
     arrMonster.push_back(spMon);
     auto transform = spMon->getNodeToParentTransform();
     arrTransform.push_back(transform);
-    arrRotationZ.push_back(0);
+    arrRotationY.push_back(0);
+    arrRotationX.push_back(0);
     
 //    auto aniName = "res/motion_1.c3t";
 //    if (rand_0_1() > 0.5) {
@@ -277,7 +328,7 @@ Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float r
     
     auto fileName = StringUtils::format("icon/head_%d.png", iTag+1);
     auto pBillBoard = Sprite::create(fileName);
-    this->addChild(pBillBoard, 1, 1);
+    scaleNode->addChild(pBillBoard, 1, 1);
     pBillBoard->setGlobalZOrder(2);
     arrHead.push_back(pBillBoard);
     
@@ -285,7 +336,7 @@ Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float r
     log("fileName = %s", fileName.c_str());
     auto badge = Sprite::create(fileName);
     pBillBoard->addChild(badge);
-    badge->setPosition(200, 0);
+    badge->setPosition(100, 100);
     badge->setGlobalZOrder(3);
     
     auto talkBg = Sprite::create("talk_bg.png");
@@ -355,6 +406,7 @@ void HelloWorld::update(float delta)
         } else {
             spBackgroud->setTexture(tex);
         }
+//        spBackgroud->setScale(2/monScale);
     }
     
     if (OcUtility::getInstance()->getIsTarget() == true) {
@@ -420,10 +472,21 @@ void HelloWorld::showSomeMonster() {
 void HelloWorld::menuCloseCallback(Ref* sender)
 {
     MenuItemImage *item = (MenuItemImage *)sender;
-    if (item->getTag() == 1) {
+    int iTag = item->getTag();
+    if (iTag == 1) {
         showARMonster();
-    } else {
+
+    } else if (iTag == 2) {
         show3DMonsters();
+    
+    } else {
+        bool result = OcUtility::getInstance()->switchCamera();
+        if (result) {
+            isCameraBack = !isCameraBack;
+            if (spBackgroud) {
+                spBackgroud->setFlippedY(!isCameraBack);
+            }
+        }
     }
     
 }

@@ -44,6 +44,8 @@ public:
     
     void showARControl();
     
+    bool switchCamera();
+    
     void showOne();
     
     cocos2d::Texture2D *getARTexture2D();

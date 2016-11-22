@@ -139,6 +139,10 @@
     arCtrl = [[ARControl alloc] initWithParentViewController:self];    
 }
 
+- (BOOL)switchCamera {
+    return [arCtrl switchCamera];
+}
+
 - (ARControl *)getARControl {
     return arCtrl;
 }

@@ -29,11 +29,13 @@ countries.
 @implementation ARControl
 
 @synthesize vapp;
+@synthesize isBackCamera;
 
 - (id)initWithParentViewController:(UIViewController *)viewCtrl
 {
     self = [super init];
     
+    isBackCamera = NO;
     // Custom initialization
     vapp = [[SampleApplicationSession alloc] initWithDelegate:self];
     
@@ -69,6 +71,26 @@ countries.
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (BOOL)switchCamera
+{
+    NSError * error = nil;
+    if ([vapp stopCamera:&error]) {
+        bool result = NO;
+        if (isBackCamera) {
+            result = [vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_FRONT error:&error];
+            isBackCamera = NO;
+        } else {
+            result = [vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_BACK error:&error];
+            isBackCamera = YES;
+        }
+
+        return result;
+    } else {
+        return NO;
+    }
+   
+}
+
 #pragma mark - SampleApplicationControl
 // callback called when the initailization of the AR is done
 - (void) onInitARDone:(NSError *)initError {
@@ -76,7 +98,7 @@ countries.
     if (initError == nil) {
         NSError * error = nil;
         [vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_BACK error:&error];
-        
+        isBackCamera = YES;
         
     } else {
         NSLog(@"Error initializing AR:%@", [initError description]);

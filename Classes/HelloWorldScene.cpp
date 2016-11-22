@@ -136,7 +136,7 @@ void HelloWorld::showCameraMonster()
     
     for (int i = 0; i < 8; i++) {
         newAngle = i*M_PI/4;
-        newZ = zeye-200;
+        newZ = zeye-400;
         newX = visibleSize.width/2-radius*sinf(newAngle);
         newY = visibleSize.height/2+radius*cosf(newAngle);
         showOneMonster(newX, newY, newZ, newAngle, i);

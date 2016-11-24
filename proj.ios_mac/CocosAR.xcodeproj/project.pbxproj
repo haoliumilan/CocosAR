@@ -90,6 +90,9 @@
 		D6B0611B1803AB670077942B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B0611A1803AB670077942B /* CoreMotion.framework */; };
 		ED545A7C1B68A1F400C3958E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED545A7B1B68A1F400C3958E /* libiconv.dylib */; };
 		ED545A7E1B68A1FA00C3958E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED545A7D1B68A1FA00C3958E /* libiconv.dylib */; };
+		F117649D1DE6BB9B00CBCC62 /* OneMonsterLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F117649B1DE6BB9B00CBCC62 /* OneMonsterLayer.cpp */; };
+		F1871E181DE58DDF00CD7043 /* ARNearbyScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1871E161DE58DDF00CD7043 /* ARNearbyScene.cpp */; };
+		F1871E1B1DE59BF300CD7043 /* RadarLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1871E191DE59BF300CD7043 /* RadarLayer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +223,12 @@
 		D6B0611A1803AB670077942B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		ED545A7B1B68A1F400C3958E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		ED545A7D1B68A1FA00C3958E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		F117649B1DE6BB9B00CBCC62 /* OneMonsterLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OneMonsterLayer.cpp; sourceTree = "<group>"; };
+		F117649C1DE6BB9B00CBCC62 /* OneMonsterLayer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OneMonsterLayer.hpp; sourceTree = "<group>"; };
+		F1871E161DE58DDF00CD7043 /* ARNearbyScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ARNearbyScene.cpp; sourceTree = "<group>"; };
+		F1871E171DE58DDF00CD7043 /* ARNearbyScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ARNearbyScene.hpp; sourceTree = "<group>"; };
+		F1871E191DE59BF300CD7043 /* RadarLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RadarLayer.cpp; sourceTree = "<group>"; };
+		F1871E1A1DE59BF300CD7043 /* RadarLayer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RadarLayer.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -377,6 +386,12 @@
 				46880B8719C43A87006E1F66 /* HelloWorldScene.h */,
 				84E470EB1D2A79A700C18FA1 /* OcUtility.mm */,
 				84E470EC1D2A79A700C18FA1 /* OcUtility.hpp */,
+				F1871E161DE58DDF00CD7043 /* ARNearbyScene.cpp */,
+				F1871E171DE58DDF00CD7043 /* ARNearbyScene.hpp */,
+				F1871E191DE59BF300CD7043 /* RadarLayer.cpp */,
+				F1871E1A1DE59BF300CD7043 /* RadarLayer.hpp */,
+				F117649B1DE6BB9B00CBCC62 /* OneMonsterLayer.cpp */,
+				F117649C1DE6BB9B00CBCC62 /* OneMonsterLayer.hpp */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -648,13 +663,16 @@
 				8466DA231D1D04AA00112CC6 /* SampleApplicationUtils.cpp in Sources */,
 				8466DA281D1D04AA00112CC6 /* Texture.mm in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
+				F1871E181DE58DDF00CD7043 /* ARNearbyScene.cpp in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
 				846750DF1D34CABB000C5CAB /* ARControl.mm in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				847ABFAD1D2B861600D5F91B /* OneViewController.m in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				84BBCFFC1D33773F005F97EA /* ImageTargetsEAGLView.mm in Sources */,
+				F1871E1B1DE59BF300CD7043 /* RadarLayer.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				F117649D1DE6BB9B00CBCC62 /* OneMonsterLayer.cpp in Sources */,
 				8466DA211D1D04AA00112CC6 /* SampleApplicationSession.mm in Sources */,
 				8466DA2F1D1D04B200112CC6 /* ImageTargetsEAGLView2.mm in Sources */,
 				8466DA301D1D04B200112CC6 /* ImageTargetsViewController.mm in Sources */,

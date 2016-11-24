@@ -383,7 +383,6 @@ void HelloWorld::onEnter()
     
     showARMonster();
     showCameraMonster();
-    this->scheduleUpdate();
 
 }
 
@@ -516,6 +515,7 @@ void HelloWorld::showARMonster()
         sp = this->getChildByTag(111);
     }
     
+    this->scheduleUpdate();
     OcUtility::getInstance()->showARControl();
 
 }

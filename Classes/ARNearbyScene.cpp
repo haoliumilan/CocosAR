@@ -10,6 +10,8 @@
 #include "OcUtility.hpp"
 #include "RadarLayer.hpp"
 #include "OneMonsterLayer.hpp"
+#include "Particle3D/PU/CCPUParticleSystem3D.h"
+#include "DrawNode3D.h"
 
 USING_NS_CC;
 
@@ -45,6 +47,22 @@ bool ARNearby::init()
     perCamera = NULL;
     pRadar = NULL;
     
+    FileUtils::getInstance()->addSearchPath("res/particle3D/materials");
+    FileUtils::getInstance()->addSearchPath("res/particle3D/scripts");
+
+    pDrawNode = DrawNode::create();
+    this->addChild(pDrawNode);
+    
+    pDrawNode3D = DrawNode3D::create();
+    this->addChild(pDrawNode3D);
+    pDrawNode3D->setCameraMask(4);
+    
+    auto listener = EventListenerTouchAllAtOnce::create();
+    listener->onTouchesBegan = CC_CALLBACK_2(ARNearby::onTouchesBegan, this);
+    listener->onTouchesMoved = CC_CALLBACK_2(ARNearby::onTouchesMoved, this);
+    listener->onTouchesEnded = CC_CALLBACK_2(ARNearby::onTouchesEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
     return true;
 }
 
@@ -75,13 +93,68 @@ void ARNearby::onEnter()
     this->scheduleUpdate();
     OcUtility::getInstance()->showARControl();
     showCameraMonster();
-    showOneMonsterLayer();
     
 }
 
 void ARNearby::onExit()
 {
     Layer::onExit();
+}
+
+void ARNearby::onTouchesBegan(const std::vector<Touch*>& touches, Event  *event)
+{
+    auto touch = touches[0];
+    auto pos = touch->getLocation();
+    
+    pDrawNode3D->clear();
+    float zeye = Director::getInstance()->getZEye();
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    Rect rect = Rect(origin.x+100, origin.y+100, visibleSize.width-200, visibleSize.height-200);
+    for (auto&& monster : arrMonster) {
+        auto aabb = monster->getAABB();
+        auto center = aabb.getCenter();
+        if (center.z < zeye && rect.containsPoint(Vec2(center.x, center.y))) {
+            generateMonster(monster);
+            return;
+        }
+    }
+
+}
+
+void ARNearby::onTouchesMoved(const std::vector<Touch*>& touches, Event  *event)
+{
+
+};
+
+void ARNearby::onTouchesEnded(const std::vector<Touch*>& touches, Event  *event)
+{
+    
+};
+
+void ARNearby::drawDot(float posX, float posY)
+{
+    pDrawNode->drawDot(Vec2(posX, posY), 10, Color4F(1, 0, 0, 1));
+}
+
+void ARNearby::generateMonster(cocos2d::Sprite3D *monster)
+{
+    auto aabb = monster->getAABB();
+    auto center = aabb.getCenter();
+    showParticle3D(center.x, center.y, center.z);
+    monster->runAction(FadeIn::create(5.0));
+
+}
+
+void ARNearby::showParticle3D(float posX, float posY, float posZ)
+{
+    auto rootps = PUParticleSystem3D::create("timeShift.pu", "pu_mediapack_01.material");
+    rootps->setScale(10.0f);
+    rootps->startParticleSystem();
+    this->addChild(rootps, 1);
+    rootps->setGlobalZOrder(2);
+    rootps->setPosition3D(Vec3(posX, posY, posZ));
+    rootps->setCameraMask(4);
 }
 
 void ARNearby::showRadarLayer()
@@ -132,6 +205,14 @@ void ARNearby::showCameraMonster()
     perCamera->setPosition3D(eye);
     perCamera->lookAt(center, up);
     
+    particleCamera = Camera::createPerspective(60, (GLfloat)visibleSize.width / visibleSize.height, 10,
+                                          zeye + visibleSize.height / 2.0f);
+    this->addChild(particleCamera);
+    particleCamera->setCameraFlag(CameraFlag::USER2);
+    particleCamera->setPosition3D(eye);
+    particleCamera->lookAt(center, up);
+    particleCamera->setDepth(1);
+    
     auto radius = zeye;
     auto newX = visibleSize.width/2;
     auto newY = 0;
@@ -159,6 +240,8 @@ Sprite3D* ARNearby::showOneMonster(float posX, float posY, float posZ, float rot
     auto spMon = Sprite3D::create("res/model_1.c3t");
     this->addChild(spMon, 1, iTag);
     spMon->setGlobalZOrder(1);
+    spMon->setCameraMask(4);
+    spMon->setOpacity(0);
     spMon->setScaleX(10);
     spMon->setScaleY(10);
     spMon->setScaleZ(10);
@@ -173,19 +256,13 @@ Sprite3D* ARNearby::showOneMonster(float posX, float posY, float posZ, float rot
 
 void ARNearby::updateCameraMonster()
 {
-    //    Size visibleSize = Director::getInstance()->getVisibleSize();
-    //    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    auto monCount = arrMonster.size();
-    for (int i = 0; i < monCount; i++) {
-        auto spMon = arrMonster[i];
-        
+    for (auto&& monster : arrMonster) {
         auto viewProjection = perCamera->getViewProjectionMatrix();
         auto cameraMat = Camera::getDefaultCamera()->getViewProjectionMatrix();
         
-        auto modelMat = arrTransform[i];
+        auto modelMat = arrTransform[monster->getTag()];
         auto newMat = cameraMat.getInversed() * viewProjection * modelMat;
-        spMon->setNodeToParentTransform(newMat);
-        
+        monster->setNodeToParentTransform(newMat);
     }
 }
 

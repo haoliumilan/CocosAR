@@ -13,16 +13,22 @@
 #include "cocos2d.h"
 
 class Radar;
+class DrawNode3D;
 
 class ARNearby : public cocos2d::Layer
 {
     cocos2d::Sprite *spBackgroud;
     cocos2d::Camera *perCamera;
+    cocos2d::Camera *particleCamera;
 
     std::vector<cocos2d::Sprite3D*> arrMonster;
     std::vector<cocos2d::Mat4> arrTransform;
     
     Radar* pRadar;
+    
+    cocos2d::DrawNode *pDrawNode;
+    
+    DrawNode3D *pDrawNode3D;
     
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -35,6 +41,10 @@ public:
   
     void update(float delta) override;
 
+    virtual void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event) override;
+    virtual void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event) override;
+    virtual void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event) override;
+    
     // implement the "static create()" method manually
     CREATE_FUNC(ARNearby);
     
@@ -44,6 +54,12 @@ public:
     
     void showRadarLayer();
     void showOneMonsterLayer();
+    
+    void drawDot(float posX, float posY);
+    
+    void showParticle3D(float posX, float posY, float posZ);
+    
+    void generateMonster(cocos2d::Sprite3D *monster);
 };
 
 #endif /* ARNearbyScene_hpp */

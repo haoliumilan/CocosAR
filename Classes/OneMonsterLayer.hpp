@@ -22,7 +22,7 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(OneMonster);
     
-    void showMonster();
+    void initMonster(std::string mId, int index);
     
     void menuCallback(Ref* sender);
 

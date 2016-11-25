@@ -14,6 +14,7 @@
 
 class Radar;
 class DrawNode3D;
+class Monster;
 
 class ARNearby : public cocos2d::Layer
 {
@@ -21,7 +22,7 @@ class ARNearby : public cocos2d::Layer
     cocos2d::Camera *perCamera;
     cocos2d::Camera *particleCamera;
 
-    std::vector<cocos2d::Sprite3D*> arrMonster;
+    std::vector<Monster*> arrMonster;
     std::vector<cocos2d::Mat4> arrTransform;
     
     Radar* pRadar;
@@ -29,6 +30,10 @@ class ARNearby : public cocos2d::Layer
     cocos2d::DrawNode *pDrawNode;
     
     DrawNode3D *pDrawNode3D;
+    
+    cocos2d::EventListenerCustom *pMotionListener;
+    cocos2d::EventListenerTouchAllAtOnce *pTouchListener;
+    cocos2d::EventListenerCustom *pRestartListener;
     
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -49,17 +54,15 @@ public:
     CREATE_FUNC(ARNearby);
     
     void showCameraMonster();
-    cocos2d::Sprite3D* showOneMonster(float posX, float posY, float posZ, float rotateY, int iTag);
+    void initMonster(float posX, float posY, float posZ, float rotateY, int iTag);
     void updateCameraMonster();
     
     void showRadarLayer();
-    void showOneMonsterLayer();
+    void showOneMonsterLayer(std::string mId, int index);
     
     void drawDot(float posX, float posY);
-    
-    void showParticle3D(float posX, float posY, float posZ);
-    
-    void generateMonster(cocos2d::Sprite3D *monster);
+            
+    void updateRadar();
 };
 
 #endif /* ARNearbyScene_hpp */

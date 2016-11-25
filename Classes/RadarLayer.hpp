@@ -21,9 +21,11 @@ public:
     virtual bool init() override;
     
     CREATE_FUNC(Radar);
-    
-    void showRadarDot(float posX, float posY);
+
     void setRadarRotate(float degrees);
+    void resetRadar();
+    void showRadarDot(float posX, float posY);
+    void showRadarTriangle(float posX, float posY);
 };
 
 #endif /* RadarLayer_hpp */

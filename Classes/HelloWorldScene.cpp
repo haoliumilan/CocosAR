@@ -299,7 +299,7 @@ void HelloWorld::updateCameraMonster()
 
 Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float rotate, int iTag)
 {
-    auto spMon = Sprite3D::create("res/model_1.c3t");
+    auto spMon = Sprite3D::create("model_1.c3t");
     scaleNode->addChild(spMon, 1, iTag);
     spMon->setGlobalZOrder(1);
     spMon->setScaleX(10);
@@ -422,7 +422,7 @@ void HelloWorld::update(float delta)
         OcUtility::getInstance()->getRotat3DFromQuat(&angle, &quat);
         
         if (spMonster == NULL) {
-            spMonster = Sprite3D::create("res/model_1.c3t");
+            spMonster = Sprite3D::create("model_1.c3t");
             this->addChild(spMonster);
             spMonster->setGlobalZOrder(1);
         }
@@ -449,7 +449,7 @@ void HelloWorld::update(float delta)
 
 void HelloWorld::showSomeMonster() {
     for (int i = 0; i < 20; i++) {
-        auto sp = Sprite3D::create("res/model_1.c3t");
+        auto sp = Sprite3D::create("model_1.c3t");
         this->addChild(sp);
         sp->setGlobalZOrder(1);
         sp->setScale(10);
@@ -458,7 +458,7 @@ void HelloWorld::showSomeMonster() {
         sp->setPosition(Vec2(x, y));
         sp->setTag(111);
         
-        auto anim = Animation3D::create("res/motion_1.c3t", "Take 001");
+        auto anim = Animation3D::create("motion_1.c3t", "Take 001");
         if (anim) {
             auto animate = Animate3D::create(anim);
             animate->setQuality(Animate3DQuality::QUALITY_HIGH);

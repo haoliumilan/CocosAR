@@ -44,10 +44,22 @@ bool Radar::init()
     return true;
 }
 
+void Radar::resetRadar()
+{
+    pDrawNode->clear();
+}
 
 void Radar::showRadarDot(float posX, float posY)
 {
-    pDrawNode->drawDot(Vec2(posX, posY), 10, Color4F(1, 0, 0, 1));
+    pDrawNode->drawDot(Vec2(posX, posY), 10, Color4F::RED);
+}
+
+void Radar::showRadarTriangle(float posX, float posY)
+{
+    auto vec1 = Vec2(posX, posY+10*tanf(M_PI/3));
+    auto vec2 = Vec2(posX-10*tanf(M_PI/3), posY-10);
+    auto vec3 = Vec2(posX+10*tanf(M_PI/3), posY-10);
+    pDrawNode->drawTriangle(vec1, vec2, vec3, Color4F::BLUE);
 }
 
 void Radar::setRadarRotate(float degrees)

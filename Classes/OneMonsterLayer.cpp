@@ -37,7 +37,6 @@ void OneMonster::onTouchesMoved(const std::vector<Touch*>& touches, Event  *even
     if (touches.size() == 1) {
         auto touch = touches[0];
         auto direction = touch->getDelta();
-        log("direction = %f, %f", direction.x, direction.y);
         auto rotation = pMonster->getRotation3D();
         if (std::abs(direction.x) > std::abs(direction.y))
         {
@@ -66,7 +65,7 @@ void OneMonster::onTouchesEnded(const std::vector<Touch*>& touches, Event  *even
 };
 
 
-void OneMonster::showMonster()
+void OneMonster::initMonster(std::string mId, int index)
 {
     Size visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -79,7 +78,8 @@ void OneMonster::showMonster()
     menu->setPosition(Vec2(0, 0));
     this->addChild(menu, 1);
 
-    pMonster = Sprite3D::create("model_1.c3t");
+    auto fileName = StringUtils::format("model_%s.c3t", mId.c_str());
+    pMonster = Sprite3D::create(fileName);
     this->addChild(pMonster);
     pMonster->setScaleX(10);
     pMonster->setScaleY(10);
@@ -87,13 +87,15 @@ void OneMonster::showMonster()
     pMonster->setPosition3D(Vec3(visibleSize.width*0.5, visibleSize.height*0.5-100, 0));
     pMonster->setGlobalZOrder(1);
     
-    auto pHead = Sprite::create("icon_2/head_1.png");
+    fileName = StringUtils::format("icon_2/head_%d.png", index+1);
+    auto pHead = Sprite::create(fileName);
     this->addChild(pHead);
     pHead->setGlobalZOrder(1);
     pHead->setPosition(Vec2(80, visibleSize.height-100));
     pHead->setScale(0.4);
     
-    auto pBadge = Sprite::create("icon_2/badge_1.png");
+    fileName = StringUtils::format("icon_2/badge_%d.png", index%4+1);
+    auto pBadge = Sprite::create(fileName);
     this->addChild(pBadge);
     pBadge->setGlobalZOrder(1);
     pBadge->setPosition(Vec2(80, visibleSize.height-100));
@@ -113,9 +115,13 @@ void OneMonster::menuCallback(Ref* sender)
     int iTag = item->getTag();
     switch (iTag) {
         case 1:
+        {
+            EventCustom event("Restart");
+            auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
+            dispatcher->dispatchEvent(&event);
             removeFromParent();
             break;
-            
+        }
         default:
             break;
     }

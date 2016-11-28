@@ -77,7 +77,7 @@ void Monster::generateMonster()
 {
     isGenerate = true;
     
-    auto rootps = PUParticleSystem3D::create("timeShift.pu", "pu_mediapack_01.material");
+    auto rootps = PUParticleSystem3D::create("lightningBolt.pu", "pu_mediapack_01.material");
     rootps->setScale(2.0f);
     rootps->setPosition3D(Vec3(0, 10, 0));
     rootps->startParticleSystem();
@@ -85,7 +85,7 @@ void Monster::generateMonster()
     rootps->setGlobalZOrder(2);
     rootps->setCameraMask(4);
 
-    pMonster->runAction(FadeIn::create(5.0));
+    pMonster->runAction(Sequence::create(DelayTime::create(2), FadeIn::create(2.0), NULL));
 
 }
 

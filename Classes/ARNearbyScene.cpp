@@ -270,7 +270,7 @@ void ARNearby::showCameraMonster()
         newAngle = i*M_PI/5;
         newZ = zeye-300+200*rand_0_1();
         newX = visibleSize.width/2-radius*sinf(newAngle);
-        newY = visibleSize.height/2+radius*cosf(newAngle);
+        newY = visibleSize.height/2+radius*cosf(newAngle)+200-200*rand_0_1();
         
         initMonster(newX, newY, newZ, newAngle, i);
         

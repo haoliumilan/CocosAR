@@ -56,11 +56,11 @@ bool HelloWorld::init()
 //    this->addChild(bg);
 //    bg->setPosition(visibleSize.width*0.5, visibleSize.height*0.5);
     
-//    lbLog = Label::createWithTTF("Hello World", "fonts/arial.ttf", 32);
-//    lbLog->setPosition(Vec2(origin.x + visibleSize.width/2,
-//                            origin.y + visibleSize.height - lbLog->getContentSize().height));
-//    lbLog->setColor(Color3B::WHITE);
-//    this->addChild(lbLog, 1);
+    lbLog = Label::createWithTTF("Hello World", "fonts/arial.ttf", 32);
+    lbLog->setPosition(Vec2(origin.x + visibleSize.width/2,
+                            origin.y + visibleSize.height - lbLog->getContentSize().height));
+    lbLog->setColor(Color3B::WHITE);
+    this->addChild(lbLog, 1);
 
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
@@ -85,7 +85,7 @@ bool HelloWorld::init()
     auto cameraItem = MenuItemFont::create("CAMERA", CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
     cameraItem->setTag(3);
     cameraItem->setPosition(Vec2(origin.x + visibleSize.width - 80,
-                                 origin.y + visibleSize.height - 50));
+                                 origin.y + 50));
     
     // create menu, it's an autorelease object
     auto menu = Menu::create(cameraItem, NULL);
@@ -299,7 +299,7 @@ void HelloWorld::updateCameraMonster()
 
 Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float rotate, int iTag)
 {
-    auto spMon = Sprite3D::create("model_1.c3t");
+    auto spMon = Sprite3D::create("monster/050/050_model.c3t");
     scaleNode->addChild(spMon, 1, iTag);
     spMon->setGlobalZOrder(1);
     spMon->setScaleX(10);
@@ -371,9 +371,11 @@ void HelloWorld::onEnter()
                                                  CC_RADIANS_TO_DEGREES(motion->roll)));
         }
         if (perCamera) {
-            perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
-                                          CC_RADIANS_TO_DEGREES(motion->pintch),
-                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
+            perCamera->setRotation3D(Vec3(CC_RADIANS_TO_DEGREES(motion->pintch), CC_RADIANS_TO_DEGREES(motion->roll), -CC_RADIANS_TO_DEGREES(motion->yaw)));
+            
+//            perCamera->setRotation3D(Vec3(CC_RADIANS_TO_DEGREES(motion->pintch),
+//                                          CC_RADIANS_TO_DEGREES(motion->yaw), 0));
+////                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
         }
         
     });
@@ -402,6 +404,7 @@ void HelloWorld::update(float delta)
             spBackgroud->setPosition(visibleSize.width/2, visibleSize.height/2);
             this->addChild(spBackgroud);
             spBackgroud->setScale(2.0);
+            spBackgroud->setRotation(90);
         } else {
             spBackgroud->setTexture(tex);
         }

@@ -24,6 +24,7 @@ class ARNearby : public cocos2d::Layer
 
     std::vector<Monster*> arrMonster;
     std::vector<cocos2d::Mat4> arrTransform;
+    std::vector<cocos2d::Vec2> arrRadarPos;
     
     Radar* pRadar;
     
@@ -32,7 +33,7 @@ class ARNearby : public cocos2d::Layer
     DrawNode3D *pDrawNode3D;
     
     cocos2d::EventListenerCustom *pMotionListener;
-    cocos2d::EventListenerTouchAllAtOnce *pTouchListener;
+    cocos2d::EventListenerTouchOneByOne *pTouchListener;
     cocos2d::EventListenerCustom *pRestartListener;
     
 public:
@@ -46,9 +47,9 @@ public:
   
     void update(float delta) override;
 
-    virtual void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event) override;
-    virtual void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event) override;
-    virtual void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event) override;
+    virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) override;
+    virtual void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) override;
+    virtual void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) override;
     
     // implement the "static create()" method manually
     CREATE_FUNC(ARNearby);
@@ -59,10 +60,9 @@ public:
     
     void showRadarLayer();
     void showOneMonsterLayer(std::string mId, int index);
-    
-    void drawDot(float posX, float posY);
-            
+                
     void updateRadar();
+    
 };
 
 #endif /* ARNearbyScene_hpp */

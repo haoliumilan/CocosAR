@@ -20,10 +20,26 @@ bool OneMonster::init()
         return false;
     }
     
+    pMonster = NULL;
+    pParticle = NULL;
+    
     Size visibleSize = Director::getInstance()->getVisibleSize();
+    float zeye = Director::getInstance()->getZEye();
+
     auto bgLayer = LayerColor::create(Color4B(0, 0, 0, 200), visibleSize.width, visibleSize.height);
     this->addChild(bgLayer);
     
+    Vec3 eye(visibleSize.width/2, visibleSize.height/2.0f, zeye),
+    center(visibleSize.width/2, visibleSize.height/2, 0.0f),
+    up(0.0f, 1.0f, 0.0f);
+    auto particleCamera = Camera::createPerspective(60, (GLfloat)visibleSize.width / visibleSize.height, 10,
+                                               zeye + visibleSize.height / 2.0f);
+    addChild(particleCamera);
+    particleCamera->setCameraFlag(CameraFlag::USER4);
+    particleCamera->setPosition3D(eye);
+    particleCamera->lookAt(center, up);
+    particleCamera->setDepth(1);
+
     return true;
 }
 
@@ -72,13 +88,17 @@ void OneMonster::initMonster(std::string mId, int index)
     auto backItem = MenuItemFont::create("BACK", CC_CALLBACK_1(OneMonster::menuCallback, this));
     backItem->setTag(1);
     backItem->setPosition(Vec2(visibleSize.width - 80, visibleSize.height - 50));
+
+    auto scanItem = MenuItemFont::create("SCAN", CC_CALLBACK_1(OneMonster::menuCallback, this));
+    scanItem->setTag(2);
+    scanItem->setPosition(Vec2(visibleSize.width*0.5, 100));
     
     // create menu, it's an autorelease object
-    auto menu = Menu::create(backItem, NULL);
+    auto menu = Menu::create(backItem, scanItem, NULL);
     menu->setPosition(Vec2(0, 0));
     this->addChild(menu, 1);
 
-    auto fileName = StringUtils::format("model_%s.c3t", mId.c_str());
+    auto fileName = StringUtils::format("monster/%s/%s_model.c3t", mId.c_str(), mId.c_str());
     pMonster = Sprite3D::create(fileName);
     this->addChild(pMonster);
     pMonster->setScaleX(10);
@@ -86,6 +106,16 @@ void OneMonster::initMonster(std::string mId, int index)
     pMonster->setScaleZ(10);
     pMonster->setPosition3D(Vec3(visibleSize.width*0.5, visibleSize.height*0.5-100, 0));
     pMonster->setGlobalZOrder(1);
+    
+    fileName = StringUtils::format("monster/%s/%s_anim_%d.c3t",
+                                   mId.c_str(), mId.c_str(), random(1, 3));
+    auto anim = Animation3D::create(fileName, "Take 001");
+    if (anim) {
+        auto animate = Animate3D::create(anim);
+        animate->setQuality(Animate3DQuality::QUALITY_HIGH);
+        auto repeate = RepeatForever::create(animate);
+        pMonster->runAction(repeate);
+    }
     
     fileName = StringUtils::format("icon_2/head_%d.png", index+1);
     auto pHead = Sprite::create(fileName);
@@ -120,6 +150,18 @@ void OneMonster::menuCallback(Ref* sender)
             auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
             dispatcher->dispatchEvent(&event);
             removeFromParent();
+            break;
+        }
+        case 2:
+        {
+            pParticle = PUParticleSystem3D::create("timeShift.pu", "pu_mediapack_01.material");
+            Size visibleSize = Director::getInstance()->getVisibleSize();
+            pParticle->setPosition3D(Vec3(visibleSize.width*0.5, visibleSize.height*0.5-100, 0));
+            pParticle->startParticleSystem();
+            addChild(pParticle, 1);
+            pParticle->setGlobalZOrder(1);
+            pParticle->setCameraMask(8);
+            
             break;
         }
         default:

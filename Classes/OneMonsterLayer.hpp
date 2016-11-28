@@ -11,10 +11,13 @@
 
 #include <stdio.h>
 #include "cocos2d.h"
+#include "Particle3D/PU/CCPUParticleSystem3D.h"
 
 class OneMonster : public cocos2d::Layer
 {
     cocos2d::Sprite3D *pMonster;
+    cocos2d::PUParticleSystem3D *pParticle;
+    
 public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init() override;

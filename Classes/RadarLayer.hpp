@@ -24,6 +24,7 @@ public:
 
     void setRadarRotate(float degrees);
     void resetRadar();
+    void showRadarDot(float posX, float posY, cocos2d::Color4F color);
     void showRadarDot(float posX, float posY);
     void showRadarTriangle(float posX, float posY);
 };

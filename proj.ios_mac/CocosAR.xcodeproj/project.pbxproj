@@ -132,7 +132,7 @@
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* CocosAR-mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CocosAR-mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* CocosAR_1.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocosAR_1.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3EACC98E19EE6D4300EB3C5E /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
@@ -308,7 +308,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* CocosAR-mobile.app */,
+				1D6058910D05DD3D006BFB54 /* CocosAR_1.1.app */,
 				5087E76F17EB910900C73F5D /* CocosAR-mobile.app */,
 			);
 			name = Products;
@@ -545,7 +545,7 @@
 			);
 			name = "CocosAR-mobile";
 			productName = iphone;
-			productReference = 1D6058910D05DD3D006BFB54 /* CocosAR-mobile.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* CocosAR_1.1.app */;
 			productType = "com.apple.product-type.application";
 		};
 		5087E73D17EB910900C73F5D /* CocosAR-desktop */ = {
@@ -761,8 +761,8 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.dragonwolf.jp;
-				PRODUCT_NAME = "CocosAR-mobile";
+				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.cocosar.1.1;
+				PRODUCT_NAME = CocosAR_1.1;
 				PROVISIONING_PROFILE = "6a2b70a0-84d6-4ed0-8d4f-bb31c49b66b8";
 				PROVISIONING_PROFILE_SPECIFIER = general_dev;
 				SDKROOT = iphoneos;
@@ -804,8 +804,8 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.dragonwolf.jp;
-				PRODUCT_NAME = "CocosAR-mobile";
+				PRODUCT_BUNDLE_IDENTIFIER = com.touchfuture.cocosar.1.1;
+				PRODUCT_NAME = CocosAR_1.1;
 				PROVISIONING_PROFILE = "6a2b70a0-84d6-4ed0-8d4f-bb31c49b66b8";
 				PROVISIONING_PROFILE_SPECIFIER = general_dev;
 				SDKROOT = iphoneos;

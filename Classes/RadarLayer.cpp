@@ -49,9 +49,14 @@ void Radar::resetRadar()
     pDrawNode->clear();
 }
 
+void Radar::showRadarDot(float posX, float posY, cocos2d::Color4F color)
+{
+    pDrawNode->drawDot(Vec2(posX, posY), 10, color);
+}
+
 void Radar::showRadarDot(float posX, float posY)
 {
-    pDrawNode->drawDot(Vec2(posX, posY), 10, Color4F::RED);
+    showRadarDot(posX, posY, Color4F::RED);
 }
 
 void Radar::showRadarTriangle(float posX, float posY)

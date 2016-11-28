@@ -18,14 +18,14 @@ class Monster : public cocos2d::Node
     cocos2d::Sprite3D *pMonster;
     bool isGenerate;
     float timeInScreen;
-    
+    std::string monId;
 public:
     
     virtual bool init() override;
     
     CREATE_FUNC(Monster);
 
-    void initMonster(std::string mId, int index);
+    void initMonster(std::string mId, int index, float heightRate);
     
     cocos2d::Vec3 getCenter();
 
@@ -38,6 +38,7 @@ public:
     
     cocos2d::Rect getTouchRect();
     cocos2d::AABB getAABB();
+    std::string getMonsterId();
     
 };
 

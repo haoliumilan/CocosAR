@@ -21,6 +21,7 @@ public:
     double pintch;
     double yaw;
     double roll;
+    cocos2d::Quaternion quater;
     
     DeviceMotion() {
         rotationX = 0.0;

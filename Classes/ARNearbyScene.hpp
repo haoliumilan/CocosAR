@@ -62,7 +62,8 @@ public:
     void showOneMonsterLayer(std::string mId, int index);
                 
     void updateRadar();
-    
+
+    void blurBackground();
 };
 
 #endif /* ARNearbyScene_hpp */

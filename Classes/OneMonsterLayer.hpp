@@ -17,6 +17,7 @@ class OneMonster : public cocos2d::Layer
 {
     cocos2d::Sprite3D *pMonster;
     cocos2d::PUParticleSystem3D *pParticle;
+    std::string monId;
     
 public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
@@ -26,6 +27,7 @@ public:
     CREATE_FUNC(OneMonster);
     
     void initMonster(std::string mId, int index);
+    void runAnimation();
     
     void menuCallback(Ref* sender);
 

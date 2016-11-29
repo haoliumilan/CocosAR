@@ -92,7 +92,11 @@ static CCDeviceMotionDispatcher* s_pDeviceMotionDispatcher;
     _deviceMotion->pintch = attitude.pitch;
     _deviceMotion->yaw = attitude.yaw;
     _deviceMotion->roll = attitude.roll;
-    
+    _deviceMotion->quater.x = attitude.quaternion.x;
+    _deviceMotion->quater.y = attitude.quaternion.y;
+    _deviceMotion->quater.z = attitude.quaternion.z;
+    _deviceMotion->quater.w = attitude.quaternion.w;
+
     EventCustom event("DeviceMotion");
     event.setUserData(_deviceMotion);
     auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();

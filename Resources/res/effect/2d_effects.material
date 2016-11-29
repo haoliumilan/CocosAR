@@ -1,0 +1,19 @@
+material sample
+{
+	technique blur
+	{
+		pass 0
+		{
+			shader
+			{
+				defines = THIS_IS_AN_EXAMPLE 1;TOMORROW_IS_HOLIDAY 2
+				vertexShader = res/shaders/example_Simple.vsh
+				fragmentShader = res/shaders/example_Blur.fsh
+				// Uniforms
+				blurRadius = 3
+				sampleNum = 5
+				resolution = 100,100
+			}
+		}
+	}
+}

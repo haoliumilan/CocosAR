@@ -90,13 +90,15 @@ void ARNearby::onEnter()
     pMotionListener = EventListenerCustom::create("DeviceMotion", [=](EventCustom* event){
         DeviceMotion *motion = static_cast<DeviceMotion*>(event->getUserData());
         if (perCamera) {
-            perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
-                                          CC_RADIANS_TO_DEGREES(motion->pintch),
-                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
+            perCamera->setRotationQuat(motion->quater);
+//            perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
+//                                          CC_RADIANS_TO_DEGREES(motion->pintch),
+//                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
             updateCameraMonster();
         }
         if (pRadar) {
-            pRadar->setRadarRotate(CC_RADIANS_TO_DEGREES(motion->yaw));
+            auto rotation = perCamera->getRotation3D();
+            pRadar->setRadarRotate(-rotation.z);
         }
         
     });
@@ -189,6 +191,8 @@ void ARNearby::showOneMonsterLayer(std::string mId, int index)
         monster->setVisible(false);
     }
     pRadar->setVisible(false);
+    
+//    blurBackground();
 }
 
 void ARNearby::update(float delta)
@@ -201,6 +205,7 @@ void ARNearby::update(float delta)
             spBackgroud->setPosition(visibleSize.width/2, visibleSize.height/2);
             addChild(spBackgroud);
             spBackgroud->setScale(2.0);
+            spBackgroud->setRotation(90);
         } else {
             spBackgroud->setTexture(tex);
         }
@@ -267,21 +272,21 @@ void ARNearby::showCameraMonster()
     auto newAngle = 0.0;
     
     for (int i = 0; i < 10; i++) {
-        newAngle = i*M_PI/5;
+        newAngle = i*M_PI/10-M_PI/2;
         newZ = zeye-300+200*rand_0_1();
         newX = visibleSize.width/2-radius*sinf(newAngle);
-        newY = visibleSize.height/2+radius*cosf(newAngle)+200-200*rand_0_1();
+        newY = visibleSize.height/2+radius*cosf(newAngle)+300-300*rand_0_1();
         
         initMonster(newX, newY, newZ, newAngle, i);
         
-        newX = (newX-visibleSize.width/2)*0.2;
-        newY = (newY-visibleSize.height/2)*0.2;
+        newX = (newX-visibleSize.width/2)*0.1;
+        newY = (newY-visibleSize.height/2)*0.1;
         if (pRadar) {
             arrRadarPos.push_back(Vec2(newX, newY));
             pRadar->showRadarDot(newX, newY);
         }
     }
-        
+    
 }
 
 void ARNearby::updateRadar()
@@ -334,4 +339,12 @@ void ARNearby::updateCameraMonster()
         monster->setNodeToParentTransform(newMat);
     }
 }
+
+void ARNearby::blurBackground()
+{
+    auto properties = Properties::createNonRefCounted("effect/2d_effects.material#sample");
+    Material *mat1 = Material::createWithProperties(properties);
+    spBackgroud->setGLProgramState(mat1->getTechniqueByName("blur")->getPassByIndex(0)->getGLProgramState());
+}
+
 

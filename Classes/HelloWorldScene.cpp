@@ -136,11 +136,13 @@ void HelloWorld::showCameraMonster()
     
     for (int i = 0; i < 8; i++) {
         newAngle = i*M_PI/4;
-        newZ = zeye-400;
+        newZ = zeye;
         newX = visibleSize.width/2-radius*sinf(newAngle);
         newY = visibleSize.height/2+radius*cosf(newAngle);
         showOneMonster(newX, newY, newZ, newAngle, i);
     }
+    
+//    perCamera->setRotation3D(Vec3(90, 0, 10));
 
 //    for (int i = 0; i < 8; i++) {
 //        newAngle = i*M_PI/4+M_PI/8;
@@ -277,7 +279,7 @@ void HelloWorld::updateCameraMonster()
     auto monCount = arrMonster.size();
     for (int i = 0; i < monCount; i++) {
         auto spMon = arrMonster[i];
-        auto spHead = arrHead[i];
+//        auto spHead = arrHead[i];
 
         auto viewProjection = perCamera->getViewProjectionMatrix();
         auto cameraMat = Camera::getDefaultCamera()->getViewProjectionMatrix();
@@ -293,7 +295,7 @@ void HelloWorld::updateCameraMonster()
         modelMat.scale(0.1*monScale);
         modelMat.translate(-100, 200, 0);
         newMat = cameraMat.getInversed() * viewProjection * modelMat;
-        spHead->setNodeToParentTransform(newMat);
+//        spHead->setNodeToParentTransform(newMat);
     }
 }
 
@@ -313,6 +315,8 @@ Sprite3D* HelloWorld::showOneMonster(float posX, float posY, float posZ, float r
     arrRotationY.push_back(0);
     arrRotationX.push_back(0);
     
+    return spMon;
+
 //    auto aniName = "res/motion_1.c3t";
 //    if (rand_0_1() > 0.5) {
 //        aniName = "res/motion_2.c3t";
@@ -365,15 +369,23 @@ void HelloWorld::onEnter()
     auto listener = EventListenerCustom::create("DeviceMotion", [=](EventCustom* event){
         DeviceMotion *motion = static_cast<DeviceMotion*>(event->getUserData());
         if (lbLog) {
-            lbLog->setString(StringUtils::format("motion:pintch = %0.f, yaw = %0.f, roll = %0.f",
-                                                 CC_RADIANS_TO_DEGREES(motion->pintch),
-                                                 CC_RADIANS_TO_DEGREES(motion->yaw),
-                                                 CC_RADIANS_TO_DEGREES(motion->roll)));
+            auto str = StringUtils::format("motion:pintch = %0.f, yaw = %0.f, roll = %0.f",
+                                              CC_RADIANS_TO_DEGREES(motion->pintch),
+                                              CC_RADIANS_TO_DEGREES(motion->yaw),
+                                              CC_RADIANS_TO_DEGREES(motion->roll));
+            str = StringUtils::format("motion:x = %0.f, y = %0.f, z = %0.f",
+                                      motion->rotationX, motion->rotationY, motion->rotationZ);
+            str = StringUtils::format("motion:x = %0.2f, y = %0.2f, z = %0.2f, w = %0.2f",
+                                      motion->quater.x, motion->quater.y,
+                                      motion->quater.z, motion->quater.w);
+            lbLog->setString(str);
         }
         if (perCamera) {
-            perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
-                                          CC_RADIANS_TO_DEGREES(motion->pintch),
-                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
+//            perCamera->setRotation3D(Vec3(
+//                                          CC_RADIANS_TO_DEGREES(motion->pintch),
+//                                          180-CC_RADIANS_TO_DEGREES(motion->yaw),
+//                                          180-CC_RADIANS_TO_DEGREES(motion->roll)));
+            perCamera->setRotationQuat(motion->quater);
         }
         
     });

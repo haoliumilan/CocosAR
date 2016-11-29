@@ -371,11 +371,9 @@ void HelloWorld::onEnter()
                                                  CC_RADIANS_TO_DEGREES(motion->roll)));
         }
         if (perCamera) {
-            perCamera->setRotation3D(Vec3(CC_RADIANS_TO_DEGREES(motion->pintch), CC_RADIANS_TO_DEGREES(motion->roll), -CC_RADIANS_TO_DEGREES(motion->yaw)));
-            
-//            perCamera->setRotation3D(Vec3(CC_RADIANS_TO_DEGREES(motion->pintch),
-//                                          CC_RADIANS_TO_DEGREES(motion->yaw), 0));
-////                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
+            perCamera->setRotation3D(Vec3(-CC_RADIANS_TO_DEGREES(motion->roll),
+                                          CC_RADIANS_TO_DEGREES(motion->pintch),
+                                          -CC_RADIANS_TO_DEGREES(motion->yaw)));
         }
         
     });
@@ -408,7 +406,6 @@ void HelloWorld::update(float delta)
         } else {
             spBackgroud->setTexture(tex);
         }
-//        spBackgroud->setScale(2/monScale);
     }
     
     if (OcUtility::getInstance()->getIsTarget() == true) {

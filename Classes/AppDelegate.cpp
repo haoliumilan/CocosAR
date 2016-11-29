@@ -28,11 +28,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::createWithRect("HelloCpp", cocos2d::Rect(0, 0, 1136, 640));
+        glview = GLViewImpl::createWithRect("HelloCpp", cocos2d::Rect(0, 0, 640, 1136));
         director->setOpenGLView(glview);
     }
 
-    director->getOpenGLView()->setDesignResolutionSize(1136, 640, ResolutionPolicy::SHOW_ALL);
+    director->getOpenGLView()->setDesignResolutionSize(640, 1136, ResolutionPolicy::SHOW_ALL);
 
     // turn on display FPS
     director->setDisplayStats(true);
@@ -43,8 +43,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->addSearchPath("res");
 
     // create a scene. it's an autorelease object
-//    auto scene = HelloWorld::createScene();
-    auto scene = ARNearby::createScene();
+    auto scene = HelloWorld::createScene();
+//    auto scene = ARNearby::createScene();
 
     // run
     director->runWithScene(scene);

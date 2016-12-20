@@ -95,6 +95,7 @@
 		F15343B81DE807010049A523 /* Monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F15343B61DE807010049A523 /* Monster.cpp */; };
 		F1871E181DE58DDF00CD7043 /* ARNearbyScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1871E161DE58DDF00CD7043 /* ARNearbyScene.cpp */; };
 		F1871E1B1DE59BF300CD7043 /* RadarLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1871E191DE59BF300CD7043 /* RadarLayer.cpp */; };
+		F1D08AEF1E0930E000B28049 /* ARScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1D08AED1E0930E000B28049 /* ARScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -235,6 +236,8 @@
 		F1871E171DE58DDF00CD7043 /* ARNearbyScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ARNearbyScene.hpp; sourceTree = "<group>"; };
 		F1871E191DE59BF300CD7043 /* RadarLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RadarLayer.cpp; sourceTree = "<group>"; };
 		F1871E1A1DE59BF300CD7043 /* RadarLayer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RadarLayer.hpp; sourceTree = "<group>"; };
+		F1D08AED1E0930E000B28049 /* ARScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ARScene.cpp; sourceTree = "<group>"; };
+		F1D08AEE1E0930E000B28049 /* ARScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARScene.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -386,6 +389,8 @@
 		46880B8319C43A87006E1F66 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F1D08AED1E0930E000B28049 /* ARScene.cpp */,
+				F1D08AEE1E0930E000B28049 /* ARScene.h */,
 				F1338DDF1DE7CF7E004CB2D4 /* DrawNode3D.cpp */,
 				F1338DE01DE7CF7E004CB2D4 /* DrawNode3D.h */,
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
@@ -691,6 +696,7 @@
 				F15343B81DE807010049A523 /* Monster.cpp in Sources */,
 				F1871E1B1DE59BF300CD7043 /* RadarLayer.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				F1D08AEF1E0930E000B28049 /* ARScene.cpp in Sources */,
 				F117649D1DE6BB9B00CBCC62 /* OneMonsterLayer.cpp in Sources */,
 				8466DA211D1D04AA00112CC6 /* SampleApplicationSession.mm in Sources */,
 				F1338DE11DE7CF7E004CB2D4 /* DrawNode3D.cpp in Sources */,

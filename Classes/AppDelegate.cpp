@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "ARNearbyScene.hpp"
+#include "ARScene.h"
 
 USING_NS_CC;
 
@@ -44,8 +45,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
 //    auto scene = HelloWorld::createScene();
-    auto scene = ARNearby::createScene();
-
+//    auto scene = ARNearby::createScene();
+    auto scene = ARScene::createScene();
     // run
     director->runWithScene(scene);
     
